@@ -277,12 +277,12 @@ class PublishingYearTab(GenericMainWindowTab):
 		
 		books_by_year_list.clear()
 		if self.selected_year:
-			if self.button_year.isChecked():
+			if self.current_time_unit == 'year':
 				for index_, book in enumerate(book_list):
 					if getattr(book, self.selected_release_type) == self.selected_year:
 						books_by_year_list.append(index_)
 			
-			elif self.button_decade.isChecked():
+			elif self.current_time_unit == 'decade':
 				for index_, book in enumerate(book_list):
 					if getattr(book, self.selected_release_type):
 						if 'older' in self.selected_year:
@@ -291,7 +291,7 @@ class PublishingYearTab(GenericMainWindowTab):
 						elif int(getattr(book, self.selected_release_type)) >= int(self.selected_year) and int(getattr(book, self.selected_release_type)) < int(self.selected_year) + 10:
 							books_by_year_list.append(index_)				
 				
-			elif self.button_century.isChecked():
+			elif self.current_time_unit == 'century':
 				for index_, book in enumerate(book_list):
 					if getattr(book, self.selected_release_type):
 						if 'older' in self.selected_year:
