@@ -203,7 +203,7 @@ class BookWidget(QWidget):
 		
 class TextBox(QTextEdit):
 	"""
-	Modifies QTextEdit to disable sorollbars, set read-only and fit
+	Modifies QTextEdit to disable scrollbars, set read-only and fit
 	height to contents.
 	
 	args:
