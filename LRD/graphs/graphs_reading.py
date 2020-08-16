@@ -59,7 +59,7 @@ class GraphsWindowReadingTab(QWidget):
 				content['labels'], 
 				content['average_length'], 
 				"Average book length by year \n In what years did I read longer books?",
-			)
+				)
 			
 			layout.addWidget(average_length_by_year)
 			
