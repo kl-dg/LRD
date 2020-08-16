@@ -31,7 +31,7 @@ reading_statuses = {
 
 					
 #List containing strings for months of the calendar 
-months = [
+months = (
 	"January",
 	"February",
 	"March",
@@ -44,5 +44,5 @@ months = [
 	"October",
 	"November",
 	"December",
-	]
+	)
 	
