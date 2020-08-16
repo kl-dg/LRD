@@ -62,8 +62,3 @@ class GenericMainWindowTab(QWidget):
 					book_count = value[0],
 					average_rating = f"{average(value[2], value[1]):.2f}",
 					))
-
-
-		
-		
-	
