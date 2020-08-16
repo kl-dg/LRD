@@ -62,7 +62,6 @@ class TextPageTab(GenericMainWindowTab):
 
 		self.text_boxes_area_settings()
 		
-		
 	
 	def text_boxes_area_settings(self):
 		"""		
