@@ -150,7 +150,6 @@ class ReadingTab(GenericMainWindowTab):
 		self.research_books_table.refresh_table()
 		self.books_not_read_table.refresh_table()
 		
-		
 
 	#"Currently reading" tab
 	def current_to_read_tab_settings(self):
