@@ -64,7 +64,6 @@ def load_file(file_path):
 				))
 			library_index += 1
 		book_list.extend(loading_list)
-		f.close()
 
 
 def write_to_file(file_path):
@@ -146,8 +145,6 @@ def write_to_file(file_path):
 				item.quotes.replace("\n", "<br/>"),
 				item.notes.replace("\n", "<br/>"),
 				])
-				
-		f.close()
 
 
 def import_from_file(file_path, last_name_first, additional_authors):
@@ -196,4 +193,3 @@ def import_from_file(file_path, last_name_first, additional_authors):
 				))
 			library_index += 1
 		book_list.extend(loading_list)
-		f.close()
