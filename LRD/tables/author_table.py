@@ -67,8 +67,8 @@ class AuthorTable(GenericTable):
 		mode: column index and whether reverse order or not.
 		"""
 		
-		if mode == '0r': self.source_list.sort(key = lambda x: f"{x['author'].split()[-1]}, {' '.join(x['author'].split()[0:-1])}" if ',' not in x['author'] else x['author'].lower(), reverse=True)
-		elif mode == '0': self.source_list.sort(key = lambda x: f"{x['author'].split()[-1]}, {' '.join(x['author'].split()[0:-1])}" if ',' not in x['author'] else x['author'].lower())
+		if mode == '0r': self.source_list.sort(key = lambda x: f"{x['author'].lower().split()[-1]}, {' '.join(x['author'].lower().split()[0:-1])}" if ',' not in x['author'] else x['author'].lower(), reverse=True)
+		elif mode == '0': self.source_list.sort(key = lambda x: f"{x['author'].lower().split()[-1]}, {' '.join(x['author'].lower().split()[0:-1])}" if ',' not in x['author'] else x['author'].lower())
 		elif mode == '1r': self.source_list.sort(key = lambda x: x['book_count'])
 		elif mode == '1': self.source_list.sort(key = lambda x: x['book_count'], reverse=True)
 		elif mode == '2r': self.source_list.sort(key = lambda x: float(x['average_rating']))
