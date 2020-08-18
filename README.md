@@ -13,3 +13,9 @@ Windows:
 3. Open command prompt or PowerShell and type _pip install pyqt5_ to add PyQt5 to Python.
 4. Still on command prompt or Powershell, type _pip install matplotlib_ to add matplotlib to Python.
 5. Double-click _start_lrd.pyw_.
+
+### Exporting to Excel
+
+1. On Excel, click on _Data_ > _From text_.
+2. Set _Original data type_ to "Delimited" and _File Origin_ to "65001: UTF-8". Click next.
+3. Check "Comma" on _Delimiters_ then click on Finish.
