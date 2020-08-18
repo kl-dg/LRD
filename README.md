@@ -14,6 +14,11 @@ Windows:
 4. Still on command prompt or Powershell, type _pip install matplotlib_ to add matplotlib to Python.
 5. Double-click _start_lrd.pyw_.
 
+### Importing your Goodreads library
+
+1. On Goodreads, go to **My Books** > **Import and Export** > **Export Library**, then download your library export file.
+2. On LRD, click on **Import** and select the CSV file you just downloaded.
+
 ### Exporting to Excel
 
 1. On Excel, click on _Data_ > _From text_.
