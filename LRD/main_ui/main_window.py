@@ -419,36 +419,36 @@ class MainWindow(QMainWindow):
 		"""
 		
 		if self.main_window_tabs.currentIndex() == 0:
-			index = [index.row() for index in interface.tab_library.table.selectionModel().selectedRows()]
-			if index: return interface.tab_library.all_indexes[index[0]]
+			index = [index.row() for index in self.tab_library.table.selectionModel().selectedRows()]
+			if index: return self.tab_library.all_indexes[index[0]]
 			
 		elif self.main_window_tabs.currentIndex() == 1:
-			index = [index.row() for index in interface.tab_search.search_table.selectionModel().selectedRows()]
+			index = [index.row() for index in self.tab_search.search_table.selectionModel().selectedRows()]
 			if index: return search_list[index[0]]
 			
 		elif self.main_window_tabs.currentIndex() == 2:
-			index = [index.row() for index in interface.tab_author.books_by_author_table.selectionModel().selectedRows()]
+			index = [index.row() for index in self.tab_author.books_by_author_table.selectionModel().selectedRows()]
 			if index: return books_by_author_list[index[0]]
 			
 		elif self.main_window_tabs.currentIndex() == 3:
-			index = [index.row() for index in interface.tab_series.books_by_series_table.selectionModel().selectedRows()]
+			index = [index.row() for index in self.tab_series.books_by_series_table.selectionModel().selectedRows()]
 			if index: return books_by_series_or_collection[index[0]]
 				
 		elif self.main_window_tabs.currentIndex() == 4:
-			index = [index.row() for index in interface.tab_publisher.books_by_publisher_table.selectionModel().selectedRows()]
+			index = [index.row() for index in self.tab_publisher.books_by_publisher_table.selectionModel().selectedRows()]
 			if index: return books_by_publisher[index[0]]
 				
 		elif self.main_window_tabs.currentIndex() == 5:
-			index = [index.row() for index in interface.tab_publication_year.books_by_year_table.selectionModel().selectedRows()]
+			index = [index.row() for index in self.tab_publication_year.books_by_year_table.selectionModel().selectedRows()]
 			if index: return books_by_year_list[index[0]]
 				
 		elif self.main_window_tabs.currentIndex() == 6:
-			if interface.tab_reading_progress.selected_book is not None: 
-				try: return static_index_dict[interface.tab_reading_progress.selected_book]
+			if self.tab_reading_progress.selected_book is not None: 
+				try: return static_index_dict[self.tab_reading_progress.selected_book]
 				except KeyError: pass
 				
 		elif self.main_window_tabs.currentIndex() == 7:
-			index = [index.row() for index in interface.tab_bookshelves.books_by_bookshelf_table.selectionModel().selectedRows()]
+			index = [index.row() for index in self.tab_bookshelves.books_by_bookshelf_table.selectionModel().selectedRows()]
 			if index: return books_by_bookshelf_list[index[0]]
 		
 		
