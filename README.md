@@ -8,11 +8,11 @@ LRD is meant to replace spreadsheet control for readers who prefer these over an
 
 Windows:
 
-1. Download LRD by clicking on _Code_ > _Download ZIP_ near the top of this page and extract the ZIP.
+1. Download LRD by clicking on **Code** > **Download ZIP** near the top of this page and extract the ZIP.
 2. Download Python 3.7 or better from [python.org](https://www.python.org/) and install it.
-3. Open command prompt or PowerShell and type _pip install pyqt5_ to add PyQt5 to Python.
-4. Still on command prompt or Powershell, type _pip install matplotlib_ to add matplotlib to Python.
-5. Double-click _start_lrd.pyw_.
+3. Open command prompt or PowerShell and type **pip install pyqt5** to add PyQt5 to Python.
+4. Still on command prompt or Powershell, type **pip install matplotlib** to add matplotlib to Python.
+5. Double-click **start_lrd.pyw**.
 
 ### Importing your Goodreads library
 
@@ -21,6 +21,6 @@ Windows:
 
 ### Exporting to Excel
 
-1. On Excel, click on _Data_ > _From text_.
-2. Set _Original data type_ to "Delimited" and _File Origin_ to "65001: UTF-8". Click next.
-3. Check "Comma" on _Delimiters_ then click on Finish.
+1. On Excel, click on **Data** > **From text**.
+2. Set **Original data type** to "Delimited" and **File Origin** to "65001: UTF-8". Click next.
+3. Check "Comma" on **Delimiters** then click on Finish.
