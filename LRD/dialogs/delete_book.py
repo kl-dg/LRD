@@ -1,4 +1,5 @@
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QLabel, QVBoxLayout
 
 from library.book_library import book_list
@@ -16,6 +17,7 @@ class DeleteBook(QDialog):
 	def __init__(self, index):
 		super().__init__()
 		self.setMinimumWidth(400)
+		self.setWindowIcon(QIcon('icons/delete.png'))
 		self.setWindowFlags(Qt.WindowCloseButtonHint)
 		self.setWindowModality(Qt.ApplicationModal)
 		self.setWindowTitle("Delete Book")
@@ -32,5 +34,3 @@ class DeleteBook(QDialog):
 		layout = QVBoxLayout(self)
 		layout.addWidget(message)
 		layout.addWidget(buttons)
-
-		
