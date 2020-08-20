@@ -1,9 +1,10 @@
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (
-	QDialog, 
+	QDialog,
 	QHBoxLayout,
 	QLabel,
-	QPushButton, 
+	QPushButton,
 	QVBoxLayout,
 	)
 	
@@ -35,10 +36,11 @@ class AskSaveBeforeQuit(QDialog):
 	def __init__(self, main_window):
 		super().__init__()
 		self.main_window = main_window
-		self.setWindowModality(Qt.ApplicationModal)
-		self.setWindowTitle("Save before quitting")
 		self.resize(300, 100)
 		self.setWindowFlags(Qt.WindowCloseButtonHint)
+		self.setWindowIcon(QIcon('icons/save.png'))
+		self.setWindowModality(Qt.ApplicationModal)
+		self.setWindowTitle("Save before quitting")
 		
 		save_button = QPushButton(self)
 		save_button.setText("Save")
