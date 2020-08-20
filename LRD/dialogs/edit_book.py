@@ -253,7 +253,7 @@ class EditBook(QWidget):
 		tenth_line_layout.addWidget(self.weblink_field)
 		
 		#Eleventh line: date added
-		if self.index is not None: date_added_label = QLabel(f"Date added: {book_list[self.index].get_date_added_ddmmmyyyyhhmm()}.")
+		if self.index is not None: date_added_label = QLabel(f"Date added: {book_list[self.index].get_date_as_string('date_added', '%d/%b/%Y %H:%M')}.")
 		
 		layout = QFormLayout()
 		layout.addRow(QLabel("Title:"),self.title_field)
