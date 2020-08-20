@@ -1,5 +1,5 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIntValidator
+from PyQt5.QtGui import QIcon, QIntValidator
 from PyQt5.QtWidgets import (
 	QFormLayout,
 	QHBoxLayout,
@@ -82,13 +82,13 @@ class EditBook(QWidget):
 		
 		if self.index is not None:
 			self.setWindowTitle("Edit book")
+			self.setWindowIcon(QIcon('icons/edit.png'))
 			edit_book_button.setText("Save changes")
 			self.preview_current_info()
 		else:
 			self.setWindowTitle("Add book")
+			self.setWindowIcon(QIcon('icons/add.png'))
 			edit_book_button.setText("Add Book")
-		
-		
 		
 		
 	def information_tab_settings(self):
