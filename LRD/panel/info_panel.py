@@ -121,7 +121,7 @@ class InfoPanel(QFormLayout):
 		rating_line = QHBoxLayout()
 		if book_list[index].rating:
 			rating_line.addWidget(QLabel(f"<b>Rating:</b> {to_rating_cb(book_list[index].rating)}"))
-		rating_line.addWidget(QLabel(f"<b>Date added:</b> {book_list[index].get_date_added_ddmmmyyyyhhmm()}"))
+		rating_line.addWidget(QLabel(f"<b>Date added:</b> {book_list[index].get_date_as_string('date_added', '%d/%b/%Y %H:%M')}"))
 		self.addRow(rating_line)
 			
 		#bookshelves
