@@ -1,5 +1,12 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QDialog, QPushButton, QVBoxLayout, QHBoxLayout, QLabel
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import (
+	QDialog,
+	QHBoxLayout, 
+	QLabel,
+	QPushButton, 
+	QVBoxLayout,
+	)
 
 
 class ConfirmNewLibrary(QDialog):
@@ -29,6 +36,7 @@ class ConfirmNewLibrary(QDialog):
 		self.behavior = behavior
 		
 		self.resize(300, 100)
+		self.setWindowIcon(QIcon('icons/save.png'))
 		self.setWindowFlags(Qt.WindowCloseButtonHint)
 		self.setWindowModality(Qt.ApplicationModal)
 		self.setWindowTitle("Save changes")
