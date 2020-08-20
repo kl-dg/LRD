@@ -127,15 +127,6 @@ class Book:
 			return getattr(self, date_type).strftime(formatting)
 		
 		
-	def get_date_added_yyyymmddhhmmss(self):
-		"""
-		Returns date added as a string yyyy/mm/dd hh:mm:ss.
-		"""
-		
-		if self.date_added: 
-			return self.date_added.strftime('%Y/%m/%d %H:%M:%S')
-		
-		
 	def date_to_yyyymmdd(self, date_type):
 		"""
 		Returns requested date as a string yyyy/mm/dd.
