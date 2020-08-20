@@ -114,7 +114,7 @@ def write_to_file(file_path):
 							  
 		for item in book_list:
 			file_writer.writerow([
-				item.get_date_added_yyyymmddhhmmss(),
+				item.get_date_as_string('date_added', '%Y/%m/%d %H:%M:%S'),
 				item.title, 
 				'; '.join(item.author), 
 				item.num_pages,
