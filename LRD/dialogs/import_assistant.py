@@ -1,4 +1,5 @@
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (
 	QButtonGroup,
 	QCheckBox,
@@ -22,6 +23,7 @@ class ImportAssistant(QWidget):
 	def __init__(self, main_window):
 		super().__init__()
 		self.main_window = main_window
+		self.setWindowIcon(QIcon('icons/import.png'))
 		self.setWindowTitle("Import Library")
 		self.setWindowModality(Qt.ApplicationModal)
 		self.setWindowFlags(Qt.WindowCloseButtonHint)
