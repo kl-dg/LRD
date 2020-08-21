@@ -112,9 +112,9 @@ class InfoPanel(QFormLayout):
 		if book_list[index].date_read or book_list[index].date_started:
 			dates_line = QHBoxLayout()
 			if book_list[index].date_read:
-				dates_line.addWidget(QLabel(f"<b>Date read:</b> {book_list[index].date_to_ddmmmyyyy('date_read')}"))
+				dates_line.addWidget(QLabel(f"<b>Date read:</b> {book_list[index].get_date_as_string('date_read', '%d/%b/%Y')}"))
 			if book_list[index].date_started:
-				dates_line.addWidget(QLabel(f"<b>Date started:</b> {book_list[index].date_to_ddmmmyyyy('date_started')}"))
+				dates_line.addWidget(QLabel(f"<b>Date started:</b> {book_list[index].get_date_as_string('date_started', '%d/%b/%Y')}"))
 			self.addRow(dates_line)
 						
 		#Rating and date added
@@ -171,6 +171,6 @@ class InfoPanel(QFormLayout):
 		if book_list[index].bought_where:
 			self.addRow(QLabel(f"<b>Bought at:</b> {book_list[index].bought_where}"))
 		if book_list[index].date_bought:
-			self.addRow(QLabel(f"<b>Date bought:</b> {book_list[index].date_to_ddmmmyyyy('date_bought')}"))
+			self.addRow(QLabel(f"<b>Date bought:</b> {book_list[index].get_date_as_string('date_bought', '%d/%b/%Y')}"))
 		if book_list[index].condition:
 			self.addRow(QLabel(f"<b>Condition:</b> {book_list[index].condition}"))
