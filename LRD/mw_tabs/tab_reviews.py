@@ -183,7 +183,7 @@ class BookWidget(QWidget):
 		else:
 			information_line_layout.addWidget(QLabel("(no author)"), 10)
 		if book.date_read:
-			information_line_layout.addWidget(QLabel(f"<b>Date read:</b> {book.date_to_ddmmmyyyy('date_read')}"), 2)
+			information_line_layout.addWidget(QLabel(f"<b>Date read:</b> {book.get_date_as_string('date_read', '%d/%b/%Y')}"), 2)
 		if book.rating:
 			information_line_layout.addWidget(QLabel(f"<b>Rating:</b> {book.rating}"), 2)
 			
