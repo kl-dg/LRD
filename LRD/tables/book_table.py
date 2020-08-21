@@ -64,7 +64,7 @@ class BookTable(GenericTable):
 			author = QTableWidgetItem('; '.join(book_list[index].author))
 			num_pages = QTableWidgetItem(book_list[index].num_pages)
 			rating = QTableWidgetItem(book_list[index].rating)
-			date_read = QTableWidgetItem(book_list[index].date_to_ddmmmyyyy('date_read'))
+			date_read = QTableWidgetItem(book_list[index].get_date_as_string('date_read', '%d/%b/%Y'))
 			reading_status = QTableWidgetItem(book_list[index].reading_status)
 			format_ = QTableWidgetItem(book_list[index].book_format)
 			publisher = QTableWidgetItem(book_list[index].publisher)
