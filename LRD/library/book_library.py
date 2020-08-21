@@ -125,11 +125,3 @@ class Book:
 		
 		if getattr(self, date_type):
 			return getattr(self, date_type).strftime(formatting)
-
-		
-	def date_to_ddmmmyyyy(self, date_type):
-		"""
-		Returns requested date as a string dd/mmm/yyyy.
-		"""
-		
-		if getattr(self, date_type): return getattr(self, date_type).strftime('%d/%b/%Y')
