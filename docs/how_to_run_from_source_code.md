@@ -2,7 +2,7 @@
 
 Beginner-friendly step-by-step.
 
-###Windows:
+### Windows:
 
 1. Download LRD by clicking on **Code** > **Download ZIP** near the top of this page and extract the ZIP.
 2. Download Python 3.7 or better from [python.org](https://www.python.org/) and install it.
@@ -10,7 +10,7 @@ Beginner-friendly step-by-step.
 4. Still on command prompt or PowerShell, type **pip install matplotlib** to add matplotlib to Python.
 5. Double-click **start_lrd.pyw**.
 
-###Linux:
+### Linux:
 
 1. Download LRD by clicking on **Code** > **Download ZIP** near the top of this page and extract the ZIP.
 2. Most distros come with Python3 pre-installed, but if you don't have it, install Python 3.7 or better.
