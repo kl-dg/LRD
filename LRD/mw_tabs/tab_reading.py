@@ -150,7 +150,7 @@ class ReadingTab(GenericMainWindowTab):
 		self.research_books_table.refresh_table()
 		self.books_not_read_table.refresh_table()
 		
-
+		
 	#"Currently reading" tab
 	def current_to_read_tab_settings(self):
 		"""
@@ -296,35 +296,32 @@ class ReadingTab(GenericMainWindowTab):
 		
 		if self.run_for_the_first_time == True:
 			self.run_for_the_first_time = False
-		else:
-			self.stats_and_info_layout.removeWidget(self.read_books_count_label)
-			self.read_books_count_label.deleteLater()
-			self.stats_and_info_layout.removeWidget(self.pages_read_count_label)
-			self.pages_read_count_label.deleteLater()
-			self.stats_and_info_layout.removeWidget(self.average_pages_label)
-			self.average_pages_label.deleteLater()
-			self.stats_and_info_layout.removeWidget(self.average_rating_label)
-			self.average_rating_label.deleteLater()
 			
-		self.read_books_count_label = QLabel(f"Total books read: {self.stats_dict['count']}.")
-		self.read_books_count_label.setAlignment(Qt.AlignCenter)
-		self.read_books_count_label.setStyleSheet('font:10pt')
-		self.stats_and_info_layout.addWidget(self.read_books_count_label)
-		
-		self.pages_read_count_label = QLabel(f"Total pages read: {self.stats_dict['length_sum']}.")
-		self.pages_read_count_label.setAlignment(Qt.AlignCenter)
-		self.pages_read_count_label.setStyleSheet('font:10pt')
-		self.stats_and_info_layout.addWidget(self.pages_read_count_label)
-		
-		self.average_pages_label = QLabel(f"Average book length: {average(self.stats_dict['length_sum'], self.stats_dict['length_count']):.1f} pages.")
-		self.average_pages_label.setAlignment(Qt.AlignCenter)
-		self.average_pages_label.setStyleSheet('font:10pt')
-		self.stats_and_info_layout.addWidget(self.average_pages_label)
-		
-		self.average_rating_label = QLabel(f"Average rating: {average(self.stats_dict['rating_sum'], self.stats_dict['rating_count']):.2f} stars.")
-		self.average_rating_label.setAlignment(Qt.AlignCenter)
-		self.average_rating_label.setStyleSheet('font:10pt')
-		self.stats_and_info_layout.addWidget(self.average_rating_label)
+			self.read_books_count_label = QLabel()
+			self.read_books_count_label.setAlignment(Qt.AlignCenter)
+			self.read_books_count_label.setStyleSheet('font:10pt')
+			
+			self.pages_read_count_label = QLabel()
+			self.pages_read_count_label.setAlignment(Qt.AlignCenter)
+			self.pages_read_count_label.setStyleSheet('font:10pt')
+			
+			self.average_pages_label = QLabel()
+			self.average_pages_label.setAlignment(Qt.AlignCenter)
+			self.average_pages_label.setStyleSheet('font:10pt')
+			
+			self.average_rating_label = QLabel()
+			self.average_rating_label.setAlignment(Qt.AlignCenter)
+			self.average_rating_label.setStyleSheet('font:10pt')
+			
+			self.stats_and_info_layout.addWidget(self.read_books_count_label)
+			self.stats_and_info_layout.addWidget(self.pages_read_count_label)
+			self.stats_and_info_layout.addWidget(self.average_pages_label)
+			self.stats_and_info_layout.addWidget(self.average_rating_label)
+			
+		self.read_books_count_label.setText(f"Total books read: {self.stats_dict['count']}.")
+		self.pages_read_count_label.setText(f"Total pages read: {self.stats_dict['length_sum']}.")
+		self.average_pages_label.setText(f"Average book length: {average(self.stats_dict['length_sum'], self.stats_dict['length_count']):.1f} pages.")
+		self.average_rating_label.setText(f"Average rating: {average(self.stats_dict['rating_sum'], self.stats_dict['rating_count']):.2f} stars.")
 		
 		
 	def open_graphs_window_reading(self):
@@ -345,7 +342,6 @@ class ReadingTab(GenericMainWindowTab):
 		self.graphs_window.show()
 	
 		
-
 	#"To read" tab
 	def wishlist_tab_settings(self):
 		"""
