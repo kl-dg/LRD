@@ -73,7 +73,7 @@ class SearchTab(GenericMainWindowTab):
 
 		self.search_input_field = QLineEdit()
 		self.search_input_field.resize(15, 200)
-		self.search_input_field.returnPressed.connect(lambda: self.search_button.click())
+		self.search_input_field.returnPressed.connect(lambda: search_button.click())
 		
 		self.search_in_cb = FieldDropDown()
 		
@@ -144,26 +144,24 @@ class SearchTab(GenericMainWindowTab):
 		
 		search_list.clear()
 		if len(self.current_search_input) > 0:
-			
 			if self.current_search_case_sensitive:
-				if not (self.current_search_field.lower() == 'bookshelves' or 'author'):
+				if self.current_search_field.lower() != 'bookshelves' and self.current_search_field.lower() != 'author':
 					for index, book in enumerate(book_list):
 						if self.current_search_input in getattr(book, self.current_search_field.lower()):
 							search_list.append(index)
-				elif self.current_search_field.lower() == 'bookshelves' or 'author':
+				else:
 					for index, book in enumerate(book_list):
 						if self.current_search_input in "; ".join(getattr(book, self.current_search_field.lower())):
 							search_list.append(index)
 							
 			elif not self.current_search_case_sensitive:
-				if not (self.current_search_field.lower() == 'bookshelves' or 'author'):
+				if self.current_search_field.lower() != 'bookshelves' and self.current_search_field.lower() != 'author':
 					for index, book in enumerate(book_list):
 						if self.current_search_input.lower() in getattr(book, self.current_search_field.lower()).lower():
 							search_list.append(index)
-				elif self.current_search_field.lower() == 'bookshelves' or 'author':
+				else:
 					for index, book in enumerate(book_list):
 						if self.current_search_input.lower() in "; ".join(getattr(book, self.current_search_field.lower())).lower():
-							search_list.append(index)
-							
+							search_list.append(index)							
 		
 		self.search_table.refresh_table()

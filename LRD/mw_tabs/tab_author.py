@@ -45,7 +45,10 @@ class AuthorTab(GenericMainWindowTab):
 		self.run_for_the_first_time = True
 		self.selected_book = None
 		
+		self.author_count_info = QLabel()
+		
 		self.author_count_info_layout = QHBoxLayout()
+		self.author_count_info_layout.addWidget(self.author_count_info)
 		
 		self.author_table = AuthorTable(self, author_list)
 		self.books_by_author_table = BookTable(self, books_by_author_list)
@@ -107,14 +110,7 @@ class AuthorTab(GenericMainWindowTab):
 		in the library.
 		"""
 		
-		if self.run_for_the_first_time == True:
-			self.run_for_the_first_time = False
-		else:
-			self.author_count_info_layout.removeWidget(self.author_count_info)
-			self.author_count_info.deleteLater()
-		
-		self.author_count_info = QLabel(f"Your library has {len(book_list)} books by {len(author_list)} authors")
-		self.author_count_info_layout.addWidget(self.author_count_info)
+		self.author_count_info.setText(f"Your library has {len(book_list)} books by {len(author_list)} authors")
 		
 		
 	def clicked_edit_author(self):
