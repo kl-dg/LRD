@@ -4,5 +4,5 @@ LRD doesn't get extract any information from GoodReads without permission, inste
 
 1. On GoodReads go to **My Books** > **Import and Export** and click on **Export Library**. 
 2. Wait a moment, then click on **Export** to download **goodreads_library_export.csv**.
-3. On LRD, click on **Import** > **Import from GoodReads**. Edit the options as you plase, then click on **Import**.
+3. On LRD, click on **Import** > **Import from GoodReads**. Edit the options as you please, then click on **Import**.
 4. Select the **goodreads_library_export.csv** file you just downloaded. If everything goes well, Your GR library will appended to the currently open LRD library.
