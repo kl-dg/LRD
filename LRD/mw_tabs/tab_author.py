@@ -1,3 +1,4 @@
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout
 	
 from functions.value_calculations import average
@@ -46,6 +47,9 @@ class AuthorTab(GenericMainWindowTab):
 		self.selected_book = None
 		
 		self.author_count_info = QLabel()
+		self.author_count_info.setStyleSheet('font:10pt')
+		self.author_count_info.setWordWrap(True)
+		self.author_count_info.setAlignment(Qt.AlignCenter)
 		
 		self.author_count_info_layout = QHBoxLayout()
 		self.author_count_info_layout.addWidget(self.author_count_info)
