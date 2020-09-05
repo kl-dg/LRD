@@ -18,3 +18,8 @@ Library Rat's Diary is my 2020 quarantine project and also my first (useful) Pyt
 Dependencies: matplotlib, pyqt5.
 
 Third party content: [Oxygen icon set](https://github.com/KDE/oxygen-icons5).
+
+
+### Ideas and Future
+
+All the initial aims were reached by now. Besides an eventual bug fixing, improvements in interface aesthetics and organization can be made, as well as adding more importing options and graphs.
