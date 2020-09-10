@@ -11,9 +11,7 @@ LRD is meant to replace spreadsheet control for readers who prefer these over an
 [How to export LRD library file to Excel](https://github.com/kl-dg/LRD/blob/master/docs/how_to_export_to_excel.md)
 
 
-### About
-
-Library Rat's Diary is my 2020 quarantine project and also my first (useful) Python application. 
+### Technical information
 
 Dependencies: matplotlib, pyqt5.
 
@@ -22,4 +20,4 @@ Third party content: [Oxygen icon set](https://github.com/KDE/oxygen-icons5).
 
 ### Ideas and Future
 
-All the initial aims were reached by now. Besides an eventual bug fixing, improvements in interface aesthetics and organization can be made, as well as adding more importing options and graphs.
+All the initial aims were reached by now. Besides an eventual bugfix, improvements in interface aesthetics and organization can be made, as well as adding more importing options and graphs. This was my very first (usable) application, so things are likely to slow down here while I move on to other projects.
