@@ -547,7 +547,7 @@ class EditBook(QWidget):
 		
 		if self.index is not None:
 			book_list[self.index] = (Book(
-				self.title_field.text(), 
+				self.title_field.text().strip(), 
 				[item.strip() for item in self.author_field.text().split(';')],
 				self.check_int(self.pages_field.text()),
 				self.publisher_field.text(),
