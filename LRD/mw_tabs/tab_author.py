@@ -93,7 +93,7 @@ class AuthorTab(GenericMainWindowTab):
 		if self.is_outdated:
 			self.author_table.refresh_table()
 			self.get_books_by_author()
-			self.refresh_author_count_info()
+			self.author_count_info.setText(f"Your library has {len(book_list)} books by {len(author_list)} authors")
 			refresh_panel(self)
 			self.is_outdated = False
 		
@@ -105,16 +105,7 @@ class AuthorTab(GenericMainWindowTab):
 		"""
 		
 		self.selected_author = None
-		self.selected_book = None
-		
-		
-	def refresh_author_count_info(self):
-		"""
-		Refreshes the message telling the amount of different authors 
-		in the library.
-		"""
-		
-		self.author_count_info.setText(f"Your library has {len(book_list)} books by {len(author_list)} authors")
+		self.selected_book = None		
 		
 		
 	def clicked_edit_author(self):
