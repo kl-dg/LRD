@@ -63,7 +63,13 @@ class EditValueByAttribute(QDialog):
 			if self.attribute == 'author':
 				for book in book_list:
 					if self.value in book.author:
-						book.author = [self.text_field.text().strip() if author == self.value else author for author in book.author]
+						if len(self.text_field.text().strip()) == 0:
+							ocurrences_indexes = [i for i in range(len(book.author)) if book.author[i] == self.value]
+							ocurrences_indexes.sort(reverse=True)
+							for i in ocurrences_indexes:
+								book.author.pop(i)
+						else:
+							book.author = [self.text_field.text().strip() if author == self.value else author for author in book.author]
 			
 			else:
 				for book in book_list:

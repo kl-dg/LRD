@@ -548,7 +548,7 @@ class EditBook(QWidget):
 		if self.index is not None:
 			book_list[self.index] = (Book(
 				self.title_field.text().strip(), 
-				[item.strip() for item in self.author_field.text().split(';')],
+				[item.strip() for item in self.author_field.text().split(';') if len(item.strip()) > 0],
 				self.check_int(self.pages_field.text()),
 				self.publisher_field.text(),
 				self.set_rating(self.rating_cb.currentText()),
@@ -584,7 +584,7 @@ class EditBook(QWidget):
 		else:
 			book_list.insert(0, Book(
 				self.title_field.text().strip(), 
-				[item.strip() for item in self.author_field.text().split(';')],
+				[item.strip() for item in self.author_field.text().split(';') if len(item.strip()) > 0],
 				self.check_int(self.pages_field.text()),
 				self.publisher_field.text(),
 				self.set_rating(self.rating_cb.currentText()),

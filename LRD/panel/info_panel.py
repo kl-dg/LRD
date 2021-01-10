@@ -36,7 +36,7 @@ class InfoPanel(QFormLayout):
 			self.addRow(series_form)
 			
 		#Author
-		if len(book_list[index].author) > 1 or book_list[index].author[0]:
+		if len(book_list[index].author) > 0:
 			self.addRow(QLabel(f"<b>Author:</b> {'; '.join(book_list[index].author)}", wordWrap=True))
 		
 		#Translator

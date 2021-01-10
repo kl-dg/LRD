@@ -104,8 +104,8 @@ class Book:
 		Returns author's name, sortable by last name.
 		"""
 		
-		if self.author[0] and ',' in self.author[0]: return self.author[0]
-		elif self.author[0]: return f"{self.author[0].split()[-1]}, {' '.join(self.author[0].split()[0:-1])}"
+		if len(self.author) > 0 and ',' in self.author[0]: return self.author[0]
+		elif len(self.author) > 0: return f"{self.author[0].split()[-1]}, {' '.join(self.author[0].split()[0:-1])}"
 		else: return ""
 		
 		

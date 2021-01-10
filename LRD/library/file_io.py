@@ -31,7 +31,7 @@ def load_file(file_path):
 		for line in content:
 			loading_list.append(Book(
 				line[1],
-				[item.lstrip() for item in line[2].split(';')], 
+				[item.lstrip() for item in line[2].split(';') if len(item.strip()) > 0], 
 				line[3], 
 				line[4], 
 				line[5], 

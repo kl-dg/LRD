@@ -178,10 +178,11 @@ class BookWidget(QWidget):
 		
 		information_line_layout = QHBoxLayout()
 		
-		if len(book.author) > 1 or book.author[0]:
+		if len(book.author) > 0:
 			information_line_layout.addWidget(QLabel(f"by {'; '.join(book.author)}", wordWrap=True), 10)
 		else:
 			information_line_layout.addWidget(QLabel("(no author)"), 10)
+			
 		if book.date_read:
 			information_line_layout.addWidget(QLabel(f"<b>Date read:</b> {book.get_date_as_string('date_read', '%d/%b/%Y')}"), 2)
 		if book.rating:

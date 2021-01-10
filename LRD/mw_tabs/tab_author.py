@@ -128,7 +128,7 @@ class AuthorTab(GenericMainWindowTab):
 		
 		author_set = set()
 		for book in book_list:
-			if len(book.author) > 1 or book.author[0]:
+			if len(book.author) > 0:
 				for author in book.author:
 					author_set.add(author)
 					
@@ -137,7 +137,7 @@ class AuthorTab(GenericMainWindowTab):
 			author_dict[author] = [0, 0, 0, 0, 0]
 			
 		for book in book_list:
-			if len(book.author) > 1 or book.author[0]:
+			if len(book.author) > 0:
 				for author in book.author:
 					author_dict[author][0] += 1
 					if book.rating:
@@ -186,8 +186,14 @@ class AuthorTab(GenericMainWindowTab):
 		"""
 		
 		books_by_author_list.clear()
-		for index_, book in enumerate(book_list):
+		
+		if self.selected_author == "":
+			for index, book in enumerate(book_list):
+				if len(book.author) == 0:
+					books_by_author_list.append(index)
+		
+		for index, book in enumerate(book_list):
 			if self.selected_author in book.author:
-				books_by_author_list.append(index_)
+				books_by_author_list.append(index)
 				
 		self.books_by_author_table.refresh_table()
