@@ -10,6 +10,7 @@ LRD is meant to replace spreadsheet control for readers who prefer these over an
 
 [How to export LRD library file to Excel](https://github.com/kl-dg/LRD/blob/master/docs/how_to_export_to_excel.md)
 
+![Screenshot](https://github.com/kl-dg/LRD/blob/master/screenshots/Screenshot1.png)
 
 ### Technical information
 
