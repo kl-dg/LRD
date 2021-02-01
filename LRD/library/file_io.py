@@ -65,7 +65,6 @@ def load_file(file_path):
 			library_index += 1
 		book_list.extend(loading_list)
 
-
 def write_to_file(file_path):
 	"""
 	Writes book library to CSV file.
