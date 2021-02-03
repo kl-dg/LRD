@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QHBoxLayout, QPushButton, QVBoxLayout
 
 from library.book_library import (
-	book_list, 
+	library, 
 	books_by_publisher, 
 	publisher_list, 
 	)
@@ -135,8 +135,8 @@ class PublisherTab(GenericMainWindowTab):
 		"""
 		
 		books_by_publisher.clear()
-		for index_, book in enumerate(book_list):
-			if book.publisher == self.selected_publisher:
-				books_by_publisher.append(index_)
+		for index in library:
+			if library[index].publisher == self.selected_publisher:
+				books_by_publisher.append(index)
 				
 		self.books_by_publisher_table.refresh_table()

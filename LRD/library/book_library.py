@@ -1,9 +1,10 @@
 from datetime import datetime
 
+library = {}
+
 #Object lists
 author_list = []
 bookshelves_list = []
-book_list = []
 collection_list = []
 publisher_list = []
 series_list = []
@@ -62,8 +63,7 @@ class Book:
 			bookshelves="",
 			condition="",
 			quotes="",
-			notes="",
-			static_index=""
+			notes=""
 			):
 					 
 		self.title = title
@@ -96,7 +96,6 @@ class Book:
 		self.condition = condition
 		self.quotes = quotes
 		self.notes = notes
-		self.static_index = static_index
 		
 
 	def author_sorted(self):

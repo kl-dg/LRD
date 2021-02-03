@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout
 from functions.value_calculations import average
 from library.book_library import (
 	bookshelves_list, 
-	book_list, 
+	library, 
 	books_by_bookshelf_list, 
 	)
 from mw_tabs.main_window_tab import GenericMainWindowTab
@@ -91,7 +91,7 @@ class BookshelvesTab(GenericMainWindowTab):
 		bookshelves_list.clear()
 		
 		bookshelves_set = set()
-		for book in book_list:
+		for book in library.values():
 			if len(book.bookshelves) > 1 or book.bookshelves[0]:
 				for shelf in book.bookshelves:
 					bookshelves_set.add(shelf)
@@ -100,7 +100,7 @@ class BookshelvesTab(GenericMainWindowTab):
 		for shelf in bookshelves_set:
 			bookshelves_dict[shelf] = [0, 0, 0, 0, 0]
 			
-		for book in book_list:
+		for book in library.values():
 			if len(book.bookshelves) > 1 or book.bookshelves[0]:
 				for shelf in book.bookshelves:
 					bookshelves_dict[shelf][0] += 1
@@ -140,8 +140,7 @@ class BookshelvesTab(GenericMainWindowTab):
 		"""
 		
 		books_by_bookshelf_list.clear()
-		for index_, book in enumerate(book_list):
-			if self.selected_bookshelf in book.bookshelves:
-				books_by_bookshelf_list.append(index_)
-				
+		
+		[books_by_bookshelf_list.append(index) for index in library if self.selected_bookshelf in library[index].bookshelves]
+
 		self.books_by_bookshelf_table.refresh_table()

@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import (
 	)
 
 from functions.string_formatting import get_int
-from library.book_library import text_box_list, book_list
+from library.book_library import text_box_list, library
 from mw_tabs.main_window_tab import GenericMainWindowTab
 from other_ui.cb_constructors import SortReviewsDropDown
 
@@ -95,8 +95,8 @@ class TextPageTab(GenericMainWindowTab):
 		"""
 		
 		text_box_list.clear()
-		for index, book in enumerate(book_list):
-			if getattr(book, self.attribute):
+		for index in library:
+			if getattr(library[index], self.attribute):
 				text_box_list.append(index)
 
 	
@@ -141,17 +141,17 @@ class TextPageTab(GenericMainWindowTab):
 		"""
 		
 		if self.sort_cb.currentIndex() == 0: 
-			text_box_list.sort(key = lambda x: book_list[x].title.lower())
+			text_box_list.sort(key = lambda x: library[x].title.lower())
 		elif self.sort_cb.currentIndex() == 1:
-			text_box_list.sort(key = lambda x: book_list[x].author_sorted().lower())
+			text_box_list.sort(key = lambda x: library[x].author_sorted().lower())
 		elif self.sort_cb.currentIndex() == 2:
-			text_box_list.sort(key = lambda x: book_list[x].rating)
+			text_box_list.sort(key = lambda x: library[x].rating)
 		elif self.sort_cb.currentIndex() == 3:
-			text_box_list.sort(key = lambda x: book_list[x].date_sortable('date_read'), reverse=True)
+			text_box_list.sort(key = lambda x: library[x].date_sortable('date_read'), reverse=True)
 		elif self.sort_cb.currentIndex() == 4:
-			text_box_list.sort(key = lambda x: get_int(book_list[x].num_pages), reverse=True)
+			text_box_list.sort(key = lambda x: get_int(library[x].num_pages), reverse=True)
 		elif self.sort_cb.currentIndex() == 5:
-			text_box_list.sort(key = lambda x: get_int(book_list[x].original_publication_year), reverse=True)
+			text_box_list.sort(key = lambda x: get_int(library[x].original_publication_year), reverse=True)
 			
 	
 class BookWidget(QWidget):
@@ -169,7 +169,7 @@ class BookWidget(QWidget):
 	
 	def __init__(self, parent, index, attribute):
 		super().__init__()
-		book = book_list[index]
+		book = library[index]
 		
 		if book.title: title = QLabel(book.title)
 		else: title = QLabel("(No Title)")
@@ -187,7 +187,7 @@ class BookWidget(QWidget):
 			information_line_layout.addWidget(QLabel(f"<b>Date read:</b> {book.get_date_as_string('date_read', '%d/%b/%Y')}"), 2)
 		if book.rating:
 			information_line_layout.addWidget(QLabel(f"<b>Rating:</b> {book.rating}"), 2)
-			
+		
 		button_edit = QPushButton()
 		button_edit.setText("Edit")
 		button_edit.clicked.connect(lambda: parent.edit_text_box(attribute, index))

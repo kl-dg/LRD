@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout
 from functions.value_calculations import average
 from library.book_library import (
 	author_list,
-	book_list, 
+	library, 
 	books_by_author_list,
 	)
 from mw_tabs.main_window_tab import GenericMainWindowTab
@@ -93,7 +93,7 @@ class AuthorTab(GenericMainWindowTab):
 		if self.is_outdated:
 			self.author_table.refresh_table()
 			self.get_books_by_author()
-			self.author_count_info.setText(f"Your library has {len(book_list)} books by {len(author_list)} authors")
+			self.author_count_info.setText(f"Your library has {len(library)} books by {len(author_list)} authors")
 			refresh_panel(self)
 			self.is_outdated = False
 		
@@ -127,7 +127,7 @@ class AuthorTab(GenericMainWindowTab):
 		author_list.clear()
 		
 		author_set = set()
-		for book in book_list:
+		for book in library.values():
 			if len(book.author) > 0:
 				for author in book.author:
 					author_set.add(author)
@@ -136,7 +136,7 @@ class AuthorTab(GenericMainWindowTab):
 		for author in author_set:
 			author_dict[author] = [0, 0, 0, 0, 0]
 			
-		for book in book_list:
+		for book in library.values():
 			if len(book.author) > 0:
 				for author in book.author:
 					author_dict[author][0] += 1
@@ -174,7 +174,6 @@ class AuthorTab(GenericMainWindowTab):
 		table.
 		"""
 		
-		books_by_author_list.clear()
 		self.selected_author = ""
 		self.get_books_by_author()
 			
@@ -188,12 +187,9 @@ class AuthorTab(GenericMainWindowTab):
 		books_by_author_list.clear()
 		
 		if self.selected_author == "":
-			for index, book in enumerate(book_list):
-				if len(book.author) == 0:
-					books_by_author_list.append(index)
+			[books_by_author_list.append(index) for index in library if len(library[index].author) == 0]
 		
-		for index, book in enumerate(book_list):
-			if self.selected_author in book.author:
-				books_by_author_list.append(index)
+		else:
+			[books_by_author_list.append(index) for index in library if self.selected_author in library[index].author]
 				
 		self.books_by_author_table.refresh_table()

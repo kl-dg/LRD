@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import (
 	QVBoxLayout,
 	)
 
-from library.book_library import book_list
+from library.book_library import library
 
 
 class EditValueByAttribute(QDialog):
@@ -61,7 +61,7 @@ class EditValueByAttribute(QDialog):
 		
 		if self.value != self.text_field.text().strip():
 			if self.attribute == 'author':
-				for book in book_list:
+				for book in library.values():
 					if self.value in book.author:
 						if len(self.text_field.text().strip()) == 0:
 							ocurrences_indexes = [i for i in range(len(book.author)) if book.author[i] == self.value]
@@ -72,10 +72,11 @@ class EditValueByAttribute(QDialog):
 							book.author = [self.text_field.text().strip() if author == self.value else author for author in book.author]
 			
 			else:
-				for book in book_list:
+				for book in library.values():
 					if getattr(book, self.attribute) == self.value:
 						setattr(book, self.attribute, self.text_field.text().strip())
 		
-		self.main_window.flag_unsaved_changes = True
-		self.main_window.set_interface_outdated()
+			self.main_window.flag_unsaved_changes = True
+			self.main_window.set_interface_outdated()
+			
 		self.close()

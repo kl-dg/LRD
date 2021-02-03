@@ -8,7 +8,7 @@ from functions.date_formatting import (
 	get_now_year,
 	)
 from functions.value_calculations import bar_chart_text_pos_h
-from library.book_library import book_list, year_read_list
+from library.book_library import library, year_read_list
 
 
 class GraphsWindowReadingTab(QWidget):
@@ -88,7 +88,7 @@ def count_books_read():
 	"""
 	
 	count = 0
-	for book in book_list:
+	for book in library.values():
 		if book.reading_status == 'Read': count += 1
 	return count
 	
@@ -154,14 +154,14 @@ def get_lib_composition():
 	"""
 	
 	status_set = set()
-	for book in book_list:
+	for book in library.values():
 		status_set.add(book.reading_status)
 	
 	status_count_dict = dict()
 	for status in status_set:
 		status_count_dict[status] = 0
 		
-	for book in book_list:
+	for book in library.values():
 		status_count_dict[book.reading_status] += 1
 	
 	

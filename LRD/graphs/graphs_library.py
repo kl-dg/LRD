@@ -3,7 +3,7 @@ from matplotlib.figure import Figure
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QScrollArea, QVBoxLayout, QWidget
 
-from library.book_library import book_list
+from library.book_library import library
 
 
 class GraphsWindowLibraryStats(QWidget):
@@ -35,7 +35,7 @@ class GraphsWindowLibraryStats(QWidget):
 		v_scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
 		v_scroll.setWidget(scrollable_content)
 		
-		if len(book_list) > 0:
+		if len(library) > 0:
 			standalone_vs_series = PieStandaloneSeries(standalone_books)
 			layout.addWidget(standalone_vs_series)
 			
@@ -57,7 +57,7 @@ def count_standalone_books():
 	"""
 	
 	count = [0, 0]
-	for book in book_list:
+	for book in library.values():
 		if book.series: count[0] += 1
 		else: count[1] += 1
 	return count
@@ -69,7 +69,7 @@ def count_rating():
 	"""
 	
 	count = [0, 0, 0, 0, 0]
-	for book in book_list:
+	for book in library.values():
 		if book.rating: count[int(book.rating)-1] += 1
 	return count
 	
@@ -81,7 +81,7 @@ def get_book_length_hist_data():
 	"""
 	
 	count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-	for book in book_list:
+	for book in library.values():
 		try:
 			if int(book.num_pages) < 1000: count[int(int(book.num_pages) / 100)] += 1
 			elif int(book.num_pages) >= 1000: count[10] += 1
@@ -104,7 +104,7 @@ def count_books_by_binding():
 		'Unbound'}
 	digital_formats = {'Ebook', 'Kindle Ebook', 'Nook Ebook'}
 	audio_formats = {'Audiobook', 'CD Audiobook', 'Cassete Audiobook'}
-	for book in book_list:
+	for book in library.values():
 		if book.book_format in physical_formats: count['counts'][0] += 1
 		elif book.book_format in digital_formats: count['counts'][1] += 1
 		elif book.book_format in audio_formats: count['counts'][2] += 1

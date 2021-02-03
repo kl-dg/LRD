@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import (
 	)
 
 from library.book_library import (
-	book_list,
+	library,
 	books_by_series_or_collection,
 	collection_list, 
 	series_list, 
@@ -33,7 +33,7 @@ class SeriesTab(GenericMainWindowTab):
 	args:
 	main_window: parent reference for using its methods.
 	
-	vars:
+	attributes:
 	self.selected_series: last clicked series, which books will be
 	displayed in books by series table.
 	
@@ -196,12 +196,12 @@ class SeriesTab(GenericMainWindowTab):
 		"""
 		
 		books_by_series_or_collection.clear()
-		for index, book in enumerate(book_list):
-			if book.series == self.selected_series:
+		for index in library:
+			if library[index].series == self.selected_series:
 				books_by_series_or_collection.append(index)
 				
 		books_by_series_or_collection.sort(
-			key = lambda x: book_list[x].volume_in_series
+			key = lambda x: library[x].volume_in_series
 			)
 			
 		self.books_by_series_table.refresh_table()
@@ -214,12 +214,12 @@ class SeriesTab(GenericMainWindowTab):
 		"""
 		
 		books_by_series_or_collection.clear()
-		for index, book in enumerate(book_list):
-			if book.collection == self.selected_collection:
+		for index in library:
+			if library[index].collection == self.selected_collection:
 				books_by_series_or_collection.append(index)
 				
 		books_by_series_or_collection.sort(
-			key = lambda x: book_list[x].volume_in_collection
+			key = lambda x: library[x].volume_in_collection
 			)
 			
 		self.books_by_series_table.refresh_table()

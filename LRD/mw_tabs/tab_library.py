@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QHBoxLayout
 
-from library.book_library import book_list
+from library.book_library import library
 from mw_tabs.main_window_tab import GenericMainWindowTab
 from panel.refresh import refresh_panel
 from panel.empty_panel import EmptyPanel
@@ -22,7 +22,7 @@ class LibraryTab(GenericMainWindowTab):
 	self.selected_book: last book clicked, for displaying in Info Panel.
 	
 	self.all_indexes: as Library Tab should display all books, this list
-	will have indexes for the entire library.
+	must have indexes for the entire library.
 	"""
 	
 	def __init__(self, main_window):
@@ -57,8 +57,7 @@ class LibraryTab(GenericMainWindowTab):
 		"""
 		
 		self.all_indexes.clear()
-		for index in range(0, len(book_list)):
-			self.all_indexes.append(index)
+		self.all_indexes.extend(list(library.keys()))
 		
 		
 	def reset_selections(self):

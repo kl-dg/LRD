@@ -14,7 +14,7 @@ from functions.string_formatting import (
 	no_rating,
 	split_series_from_title,
 	)
-from library.book_library import Book, book_list
+from library.book_library import Book, library
 from library.library_indexer import get_index
 							   
 
@@ -26,10 +26,11 @@ def load_file(file_path):
 	with open(file_path, encoding='utf-8') as f:
 		content = csv.reader(f)
 		f.readline()
-		loading_list = list()
+		books_being_loaded = dict()
 		library_index = get_index()
+		
 		for line in content:
-			loading_list.append(Book(
+			books_being_loaded[library_index] = Book(
 				line[1],
 				[item.lstrip() for item in line[2].split(';') if len(item.strip()) > 0], 
 				line[3], 
@@ -60,11 +61,11 @@ def load_file(file_path):
 				line[27],
 				line[28],
 				line[29],
-				library_index,
-				))
+				)
+				
 			library_index += 1
-		book_list.extend(loading_list)
-
+				
+		library.update(books_being_loaded)
 
 def write_to_file(file_path):
 	"""
@@ -112,7 +113,7 @@ def write_to_file(file_path):
 			"Notes",
 			])
 							  
-		for item in book_list:
+		for item in library.values():
 			file_writer.writerow([
 				item.get_date_as_string('date_added', '%Y/%m/%d %H:%M:%S'),
 				item.title, 
@@ -155,10 +156,11 @@ def import_from_file(file_path, last_name_first, additional_authors):
 	with open(file_path, encoding='utf-8') as f:
 		content = csv.reader(f)
 		f.readline()
-		loading_list = list()
+		books_being_loaded = dict()
 		library_index = get_index()
+		
 		for line in content:
-			loading_list.append(Book(
+			books_being_loaded[library_index] = Book(
 				split_series_from_title(line[1])[0],
 				author_import_from_gr(line[2], line[3], line[4], last_name_first, additional_authors),
 				line[11], 
@@ -189,7 +191,9 @@ def import_from_file(file_path, last_name_first, additional_authors):
 				format_condition(line[28], line[29]),
 				"",
 				line[21],
-				library_index,
-				))
+				)
+				
 			library_index += 1
-		book_list.extend(loading_list)
+		
+		library.update(books_being_loaded)
+			
