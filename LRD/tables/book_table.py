@@ -51,7 +51,7 @@ class BookTable(GenericTable):
 		self.setColumnWidth(8,100)
 		
 		
-	def refresh_table(self, **args):
+	def refresh_table(self, **kwargs):
 		"""
 		Removes all books currently on table, then adds all books on
 		the refreshed source list.

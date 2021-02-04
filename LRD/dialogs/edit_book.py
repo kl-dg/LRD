@@ -17,7 +17,6 @@ from PyQt5.QtWidgets import (
 from functions.date_formatting import (
 	get_now_time, 
 	ddmmyyyy_to_datetime, 
-	date_to_split,
 	)
 from functions.isbn import isbn_10_validator, isbn_13_validator
 from functions.string_formatting import to_rating_cb					 				 
@@ -384,17 +383,17 @@ class EditBook(QWidget):
 		self.original_publication_year_field.setText(library[self.index].original_publication_year)
 		self.number_of_volumes_sb.setValue(self.set_number_of_volumes(library[self.index].number_of_volumes))
 		self.bookshelves_field.setText("; ".join(library[self.index].bookshelves))
-		self.day_bought.setCurrentIndex(date_to_split(library[self.index].date_bought)[0])
-		self.month_bought.setCurrentIndex(date_to_split(library[self.index].date_bought)[1])
-		self.year_bought.setCurrentIndex(self.year_bought.findText(date_to_split(library[self.index].date_bought)[2]))
+		self.day_bought.setCurrentIndex(library[self.index].date_bought.day)
+		self.month_bought.setCurrentIndex(library[self.index].date_bought.month)
+		self.year_bought.setCurrentIndex(self.year_bought.findText(str(library[self.index].date_bought.year)))
 		self.condition_field.setText(library[self.index].condition)
 		self.weblink_field.setText(library[self.index].weblink)
-		self.day_started.setCurrentIndex(date_to_split(library[self.index].date_started)[0])
-		self.month_started.setCurrentIndex(date_to_split(library[self.index].date_started)[1])
-		self.year_started.setCurrentIndex(self.year_started.findText(date_to_split(library[self.index].date_started)[2]))
-		self.day_read.setCurrentIndex(date_to_split(library[self.index].date_read)[0])
-		self.month_read.setCurrentIndex(date_to_split(library[self.index].date_read)[1])
-		self.year_read.setCurrentIndex(self.year_read.findText(date_to_split(library[self.index].date_read)[2]))
+		self.day_started.setCurrentIndex(library[self.index].date_started.day)
+		self.month_started.setCurrentIndex(library[self.index].date_started.month)
+		self.year_started.setCurrentIndex(self.year_started.findText(str(library[self.index].date_started.year)))
+		self.day_read.setCurrentIndex(library[self.index].date_read.day)
+		self.month_read.setCurrentIndex(library[self.index].date_read.day)
+		self.year_read.setCurrentIndex(self.year_read.findText(str(library[self.index].date_read.year)))
 		self.reading_status_cb.setCurrentIndex(self.reading_status_cb.findText(self.to_reading_status_cb(library[self.index].reading_status)))
 		self.rating_cb.setCurrentIndex(self.rating_cb.findText(to_rating_cb(library[self.index].rating)))
 		self.times_read_sb.setValue(self.set_times_read_sb(library[self.index].times_read))
@@ -440,9 +439,9 @@ class EditBook(QWidget):
 		Sets date started reading field to current day.
 		"""
 		
-		self.day_started.setCurrentIndex(date_to_split(get_now_time())[0])
-		self.month_started.setCurrentIndex(date_to_split(get_now_time())[1])
-		self.year_started.setCurrentIndex(self.year_started.findText(date_to_split(get_now_time())[2]))
+		self.day_started.setCurrentIndex(get_now_time().day)
+		self.month_started.setCurrentIndex(get_now_time().month)
+		self.year_started.setCurrentIndex(self.year_started.findText(str(get_now_time().year)))
 		
 		
 	def set_read_today(self):
@@ -450,9 +449,9 @@ class EditBook(QWidget):
 		Sets date finished reading field to current day.
 		"""
 		
-		self.day_read.setCurrentIndex(date_to_split(get_now_time())[0])
-		self.month_read.setCurrentIndex(date_to_split(get_now_time())[1])
-		self.year_read.setCurrentIndex(self.year_read.findText(date_to_split(get_now_time())[2]))
+		self.day_read.setCurrentIndex(get_now_time().day)
+		self.month_read.setCurrentIndex(get_now_time().month)
+		self.year_read.setCurrentIndex(self.year_read.findText(str(get_now_time().year)))
 				
 	
 	def to_format_cb(self, value):

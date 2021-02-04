@@ -1,10 +1,12 @@
+from datetime import date
 from datetime import datetime
 
 # Date generators
+	
 
 def get_now_time():
 	"""
-	Returns current time.
+	Returns current date and time.
 	"""
 	
 	return datetime.now()
@@ -46,22 +48,6 @@ def yyyymmddhhmmss_to_datetime(value):
 	"""
 	
 	if value: return datetime.strptime(value, '%Y/%m/%d %H:%M:%S')
-
-
-#From datetime object to string		
-		
-def date_to_split(value):
-	"""
-	Splits date and returns values in a list [day, month, year]
-	"""
-	
-	if value:
-		day = value.strftime('%d')
-		month = value.strftime('%m')
-		year = value.strftime('%Y')
-		return (int(day), int(month), year)
-	else: return (0, 0, "")
-	
 	
 #Calculations with dates
 def days_elapsed_from_january_first():
