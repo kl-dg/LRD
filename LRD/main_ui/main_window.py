@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import (
 from main_ui.toolbar import ToolBar
 
 from library.book_library import (
-	book_list,
+	library,
 	books_by_author_list, 
 	books_by_bookshelf_list,
 	books_by_publisher, 
@@ -25,12 +25,6 @@ from library.file_io import (
 	load_file,
 	import_from_file,
 	)
-
-from library.library_indexer import (
-	get_index_list,
-	refresh_index_list, 
-	static_index_dict,
-	)	
 
 from dialogs.close_program import AskSaveBeforeQuit
 from dialogs.edit_attribute import EditValueByAttribute
@@ -149,8 +143,7 @@ class MainWindow(QMainWindow):
 			self.confirm_new_library = ConfirmNewLibrary(self, 'new')
 			self.confirm_new_library.exec_()
 		else:
-			book_list.clear()
-			static_index_dict.clear()
+			library.clear()
 			self.working_file = ""
 			self.reset_tab_selections()
 			self.set_interface_outdated()
@@ -184,11 +177,9 @@ class MainWindow(QMainWindow):
 				"",
 				"CSV Files (*.csv)")
 			if file_path[0]:
-				book_list.clear()
-				static_index_dict.clear()
+				library.clear()
 	
 				load_file(file_path[0])
-				get_index_list()
 				self.set_interface_outdated()
 				self.reset_tab_selections()
 				self.refresh_current_tab()
@@ -223,7 +214,6 @@ class MainWindow(QMainWindow):
 			if file_path[0]:
 				import_from_file(file_path[0], last_name_first, get_additional_authors)
 				self.flag_unsaved_changes = True
-				refresh_index_list()
 				self.set_interface_outdated()
 				self.refresh_current_tab()
 				
@@ -247,7 +237,6 @@ class MainWindow(QMainWindow):
 			if file_path[0]:
 				load_file(file_path[0])
 				self.flag_unsaved_changes = True
-				refresh_index_list()
 				self.set_interface_outdated()
 				self.refresh_current_tab()
 			
@@ -370,9 +359,8 @@ class MainWindow(QMainWindow):
 		index = self.get_selected_book()
 		if index is not None:
 			if self.prompt_delete_book(index):
-				book_list.pop(index)
+				library.pop(index)
 				self.flag_unsaved_changes = True
-				refresh_index_list()
 				self.set_interface_outdated()
 				self.refresh_current_tab()
 				
@@ -415,7 +403,7 @@ class MainWindow(QMainWindow):
 	def get_selected_book(self):
 		"""
 		Checks what tab is open and if there's a selected book.
-		Return book's static library index.
+		Return book's library index.
 		"""
 		
 		if self.main_window_tabs.currentIndex() == 0:
@@ -444,8 +432,7 @@ class MainWindow(QMainWindow):
 				
 		elif self.main_window_tabs.currentIndex() == 6:
 			if self.tab_reading_progress.selected_book is not None: 
-				try: return static_index_dict[self.tab_reading_progress.selected_book]
-				except KeyError: pass
+				if index: return self.tab_reading_progress.selected_book
 				
 		elif self.main_window_tabs.currentIndex() == 7:
 			index = [index.row() for index in self.tab_bookshelves.books_by_bookshelf_table.selectionModel().selectedRows()]

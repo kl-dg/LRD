@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget
 
 from functions.value_calculations import average
-from library.book_library import book_list
+from library.book_library import library
 
 class GenericMainWindowTab(QWidget):
 	"""
@@ -29,13 +29,15 @@ class GenericMainWindowTab(QWidget):
 		
 		working_list.clear()
 		attribute_set = set()
-		for book in book_list:
+		for book in library.values():
 			if getattr(book, attribute):
 				attribute_set.add(getattr(book, attribute))
+				
 		attribute_dict = dict()
 		for attribute_ in attribute_set:
 			attribute_dict[attribute_] = [0, 0, 0, 0, 0]
-		for book in book_list:
+			
+		for book in library.values():
 			try:
 				attribute_dict[getattr(book, attribute)][0] += 1
 				if book.rating:

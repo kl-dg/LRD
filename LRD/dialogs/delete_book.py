@@ -2,7 +2,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QLabel, QVBoxLayout
 
-from library.book_library import book_list
+from library.book_library import library
 
 class DeleteBook(QDialog):
 	"""
@@ -22,7 +22,7 @@ class DeleteBook(QDialog):
 		self.setWindowModality(Qt.ApplicationModal)
 		self.setWindowTitle("Delete Book")
 		
-		message = QLabel(f"Are you sure you want to delete <b>{book_list[index].title}</b> by <b>{'; '.join(book_list[index].author)}</b>? <br><\br><br><\br>This action cannot be undone.<br><\br>", wordWrap=True)
+		message = QLabel(f"Are you sure you want to delete <b>{library[index].title}</b> by <b>{'; '.join(library[index].author)}</b>? <br><\br><br><\br>This action cannot be undone.<br><\br>", wordWrap=True)
 		
 		buttons = QDialogButtonBox(
 			QDialogButtonBox.Ok | QDialogButtonBox.Cancel,

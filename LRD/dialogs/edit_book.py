@@ -17,13 +17,12 @@ from PyQt5.QtWidgets import (
 from functions.date_formatting import (
 	get_now_time, 
 	ddmmyyyy_to_datetime, 
-	date_to_split,
 	)
 from functions.isbn import isbn_10_validator, isbn_13_validator
 from functions.string_formatting import to_rating_cb					 				 
 from library.strings import available_formats, reading_statuses
-from library.book_library import book_list, Book	
-from library.library_indexer import get_index, refresh_index_list
+from library.book_library import library, Book
+from library.library_indexer import get_index
 from other_ui.cb_constructors import (
 	DayDropDown, 
 	FormatDropDown, 
@@ -253,7 +252,7 @@ class EditBook(QWidget):
 		tenth_line_layout.addWidget(self.weblink_field)
 		
 		#Eleventh line: date added
-		if self.index is not None: date_added_label = QLabel(f"Date added: {book_list[self.index].get_date_as_string('date_added', '%d/%b/%Y %H:%M')}.")
+		if self.index is not None: date_added_label = QLabel(f"Date added: {library[self.index].get_date_as_string('date_added', '%d/%b/%Y %H:%M')}.")
 		
 		layout = QFormLayout()
 		layout.addRow(QLabel("Title:"),self.title_field)
@@ -367,40 +366,40 @@ class EditBook(QWidget):
 		Fills all available fields when editing a book.
 		"""
 		
-		self.title_field.setText(book_list[self.index].title)
-		self.author_field.setText("; ".join(book_list[self.index].author))
-		self.translator_field.setText(book_list[self.index].translator)
-		self.pages_field.setText(book_list[self.index].num_pages)
-		self.isbn10_field.setText(book_list[self.index].isbn10)
-		self.isbn13_field.setText(book_list[self.index].isbn13)
-		self.format_cb.setCurrentIndex(self.format_cb.findText(self.to_format_cb(book_list[self.index].book_format)))
-		self.publication_year_field.setText(book_list[self.index].edition_publication_year)
-		self.publisher_field.setText(book_list[self.index].publisher)
-		self.series_field.setText(book_list[self.index].series)
-		self.volume_in_series_field.setText(book_list[self.index].volume_in_series)
-		self.collection_field.setText(book_list[self.index].collection)
-		self.volume_in_collection_field.setText(book_list[self.index].volume_in_collection)
-		self.original_title_field.setText(book_list[self.index].original_title)
-		self.original_publication_year_field.setText(book_list[self.index].original_publication_year)
-		self.number_of_volumes_sb.setValue(self.set_number_of_volumes(book_list[self.index].number_of_volumes))
-		self.bookshelves_field.setText("; ".join(book_list[self.index].bookshelves))
-		self.day_bought.setCurrentIndex(date_to_split(book_list[self.index].date_bought)[0])
-		self.month_bought.setCurrentIndex(date_to_split(book_list[self.index].date_bought)[1])
-		self.year_bought.setCurrentIndex(self.year_bought.findText(date_to_split(book_list[self.index].date_bought)[2]))
-		self.condition_field.setText(book_list[self.index].condition)
-		self.weblink_field.setText(book_list[self.index].weblink)
-		self.day_started.setCurrentIndex(date_to_split(book_list[self.index].date_started)[0])
-		self.month_started.setCurrentIndex(date_to_split(book_list[self.index].date_started)[1])
-		self.year_started.setCurrentIndex(self.year_started.findText(date_to_split(book_list[self.index].date_started)[2]))
-		self.day_read.setCurrentIndex(date_to_split(book_list[self.index].date_read)[0])
-		self.month_read.setCurrentIndex(date_to_split(book_list[self.index].date_read)[1])
-		self.year_read.setCurrentIndex(self.year_read.findText(date_to_split(book_list[self.index].date_read)[2]))
-		self.reading_status_cb.setCurrentIndex(self.reading_status_cb.findText(self.to_reading_status_cb(book_list[self.index].reading_status)))
-		self.rating_cb.setCurrentIndex(self.rating_cb.findText(to_rating_cb(book_list[self.index].rating)))
-		self.times_read_sb.setValue(self.set_times_read_sb(book_list[self.index].times_read))
-		self.review_box.setText(book_list[self.index].review)
-		self.quote_box.setText(book_list[self.index].quotes)
-		self.notes_box.setText(book_list[self.index].notes)
+		self.title_field.setText(library[self.index].title)
+		self.author_field.setText("; ".join(library[self.index].author))
+		self.translator_field.setText(library[self.index].translator)
+		self.pages_field.setText(library[self.index].num_pages)
+		self.isbn10_field.setText(library[self.index].isbn10)
+		self.isbn13_field.setText(library[self.index].isbn13)
+		self.format_cb.setCurrentIndex(self.format_cb.findText(self.to_format_cb(library[self.index].book_format)))
+		self.publication_year_field.setText(library[self.index].edition_publication_year)
+		self.publisher_field.setText(library[self.index].publisher)
+		self.series_field.setText(library[self.index].series)
+		self.volume_in_series_field.setText(library[self.index].volume_in_series)
+		self.collection_field.setText(library[self.index].collection)
+		self.volume_in_collection_field.setText(library[self.index].volume_in_collection)
+		self.original_title_field.setText(library[self.index].original_title)
+		self.original_publication_year_field.setText(library[self.index].original_publication_year)
+		self.number_of_volumes_sb.setValue(self.set_number_of_volumes(library[self.index].number_of_volumes))
+		self.bookshelves_field.setText("; ".join(library[self.index].bookshelves))
+		self.day_bought.setCurrentIndex(library[self.index].date_bought.day)
+		self.month_bought.setCurrentIndex(library[self.index].date_bought.month)
+		self.year_bought.setCurrentIndex(self.year_bought.findText(str(library[self.index].date_bought.year)))
+		self.condition_field.setText(library[self.index].condition)
+		self.weblink_field.setText(library[self.index].weblink)
+		self.day_started.setCurrentIndex(library[self.index].date_started.day)
+		self.month_started.setCurrentIndex(library[self.index].date_started.month)
+		self.year_started.setCurrentIndex(self.year_started.findText(str(library[self.index].date_started.year)))
+		self.day_read.setCurrentIndex(library[self.index].date_read.day)
+		self.month_read.setCurrentIndex(library[self.index].date_read.day)
+		self.year_read.setCurrentIndex(self.year_read.findText(str(library[self.index].date_read.year)))
+		self.reading_status_cb.setCurrentIndex(self.reading_status_cb.findText(self.to_reading_status_cb(library[self.index].reading_status)))
+		self.rating_cb.setCurrentIndex(self.rating_cb.findText(to_rating_cb(library[self.index].rating)))
+		self.times_read_sb.setValue(self.set_times_read_sb(library[self.index].times_read))
+		self.review_box.setText(library[self.index].review)
+		self.quote_box.setText(library[self.index].quotes)
+		self.notes_box.setText(library[self.index].notes)
 		
 		
 	def check_isbn_10(self):
@@ -440,9 +439,9 @@ class EditBook(QWidget):
 		Sets date started reading field to current day.
 		"""
 		
-		self.day_started.setCurrentIndex(date_to_split(get_now_time())[0])
-		self.month_started.setCurrentIndex(date_to_split(get_now_time())[1])
-		self.year_started.setCurrentIndex(self.year_started.findText(date_to_split(get_now_time())[2]))
+		self.day_started.setCurrentIndex(get_now_time().day)
+		self.month_started.setCurrentIndex(get_now_time().month)
+		self.year_started.setCurrentIndex(self.year_started.findText(str(get_now_time().year)))
 		
 		
 	def set_read_today(self):
@@ -450,9 +449,9 @@ class EditBook(QWidget):
 		Sets date finished reading field to current day.
 		"""
 		
-		self.day_read.setCurrentIndex(date_to_split(get_now_time())[0])
-		self.month_read.setCurrentIndex(date_to_split(get_now_time())[1])
-		self.year_read.setCurrentIndex(self.year_read.findText(date_to_split(get_now_time())[2]))
+		self.day_read.setCurrentIndex(get_now_time().day)
+		self.month_read.setCurrentIndex(get_now_time().month)
+		self.year_read.setCurrentIndex(self.year_read.findText(str(get_now_time().year)))
 				
 	
 	def to_format_cb(self, value):
@@ -546,7 +545,7 @@ class EditBook(QWidget):
 		"""
 		
 		if self.index is not None:
-			book_list[self.index] = (Book(
+			library[self.index] = Book(
 				self.title_field.text().strip(), 
 				[item.strip() for item in self.author_field.text().split(';') if len(item.strip()) > 0],
 				self.check_int(self.pages_field.text()),
@@ -555,7 +554,7 @@ class EditBook(QWidget):
 				ddmmyyyy_to_datetime(f"{self.day_read.currentText()}/{self.month_read.currentIndex()}/{self.year_read.currentText()}"),
 				self.isbn10_field.text(),
 				self.isbn13_field.text(),
-				book_list[self.index].date_added,
+				library[self.index].date_added,
 				ddmmyyyy_to_datetime(f"{self.day_started.currentText()}/{self.month_started.currentIndex()}/{self.year_started.currentText()}"),
 				self.reading_status_cb.currentText(),
 				self.format_cb.currentText(),
@@ -577,12 +576,11 @@ class EditBook(QWidget):
 				self.condition_field.text(),
 				self.quote_box.toPlainText(),
 				self.notes_box.toPlainText(),
-				book_list[self.index].static_index
-				))
+				)
 									 
 									 
 		else:
-			book_list.insert(0, Book(
+			library[get_index()] = Book(
 				self.title_field.text().strip(), 
 				[item.strip() for item in self.author_field.text().split(';') if len(item.strip()) > 0],
 				self.check_int(self.pages_field.text()),
@@ -613,9 +611,7 @@ class EditBook(QWidget):
 				self.condition_field.text(),
 				self.quote_box.toPlainText(),
 				self.notes_box.toPlainText(),
-				get_index(),
-				))
-			refresh_index_list()
+				)
 								 
 		self.parent.flag_unsaved_changes = True
 		self.parent.set_interface_outdated()

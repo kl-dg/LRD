@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import (
 from functions.date_formatting import get_now_year
 from functions.value_calculations import average
 from library.book_library import (
-	book_list, 
+	library, 
 	books_by_year_list, 
 	year_list,
 	)
@@ -190,7 +190,7 @@ class PublishingYearTab(GenericMainWindowTab):
 			cur_decade -= 10
 		decades_dict[f"{cur_decade + 9} or older"] = [0, 0, 0]
 		
-		for book in book_list:
+		for book in library.values():
 			if getattr(book, self.selected_release_type):
 				try:
 					decades_dict[f"{getattr(book, self.selected_release_type)[0:-1]}0"][0] += 1
@@ -229,7 +229,7 @@ class PublishingYearTab(GenericMainWindowTab):
 			cur_century -= 100
 		centuries_dict[f"{cur_century + 100} or older"] = [0, 0, 0]
 		
-		for book in book_list:
+		for book in library.values():
 			if getattr(book, self.selected_release_type):
 				try:
 					if not int(getattr(book, self.selected_release_type)) % 100 == 0:
@@ -278,26 +278,26 @@ class PublishingYearTab(GenericMainWindowTab):
 		books_by_year_list.clear()
 		if self.selected_year:
 			if self.current_time_unit == 'year':
-				for index_, book in enumerate(book_list):
-					if getattr(book, self.selected_release_type) == self.selected_year:
-						books_by_year_list.append(index_)
+				for index in library:
+					if getattr(library[index], self.selected_release_type) == self.selected_year:
+						books_by_year_list.append(index)
 			
 			elif self.current_time_unit == 'decade':
-				for index_, book in enumerate(book_list):
-					if getattr(book, self.selected_release_type):
+				for index in library:
+					if getattr(library[index], self.selected_release_type):
 						if 'older' in self.selected_year:
-							if int(getattr(book, self.selected_release_type)) < int(f'{int(get_now_year()[0:-1]) - 20}0'):
-								books_by_year_list.append(index_)
-						elif int(getattr(book, self.selected_release_type)) >= int(self.selected_year) and int(getattr(book, self.selected_release_type)) < int(self.selected_year) + 10:
-							books_by_year_list.append(index_)				
+							if int(getattr(library[index], self.selected_release_type)) < int(f'{int(get_now_year()[0:-1]) - 20}0'):
+								books_by_year_list.append(index)
+						elif int(getattr(library[index], self.selected_release_type)) >= int(self.selected_year) and int(getattr(library[index], self.selected_release_type)) < int(self.selected_year) + 10:
+							books_by_year_list.append(index)				
 				
 			elif self.current_time_unit == 'century':
-				for index_, book in enumerate(book_list):
-					if getattr(book, self.selected_release_type):
+				for index in library:
+					if getattr(library[index], self.selected_release_type):
 						if 'older' in self.selected_year:
-							if int(getattr(book, self.selected_release_type)) <= int(f'{int(get_now_year()[0:-2]) - 10}00'):
-								books_by_year_list.append(index_)
-						elif int(getattr(book, self.selected_release_type)) > int(self.selected_year) and int(getattr(book, self.selected_release_type)) <= int(self.selected_year) + 100:
-							books_by_year_list.append(index_)
+							if int(getattr(library[index], self.selected_release_type)) <= int(f'{int(get_now_year()[0:-2]) - 10}00'):
+								books_by_year_list.append(index)
+						elif int(getattr(library[index], self.selected_release_type)) > int(self.selected_year) and int(getattr(library[index], self.selected_release_type)) <= int(self.selected_year) + 100:
+							books_by_year_list.append(index)
 					
 		self.books_by_year_table.refresh_table()

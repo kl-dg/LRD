@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import (
 	QVBoxLayout, 
 	)
 
-from library.book_library import book_list
+from library.book_library import library
 
 class EditText(QDialog):
 	"""
@@ -22,11 +22,11 @@ class EditText(QDialog):
 	field: attribute to be edited, either 'review', 'quotes' or 'notes'.
 	"""
 	
-	def __init__(self, index, field, parent):
+	def __init__(self, index, field, main_window):
 		super().__init__()
 		self.index = index
 		self.field = field
-		self.parent = parent
+		self.main_window = main_window
 		
 		self.resize(600, 600)
 		self.setWindowFlags(Qt.WindowCloseButtonHint)
@@ -34,7 +34,7 @@ class EditText(QDialog):
 		self.setWindowTitle(f"Edit {self.field.title()}")
 		
 		self.text_box = QTextEdit()
-		self.text_box.setText(getattr(book_list[index], self.field))
+		self.text_box.setText(getattr(library[index], self.field))
 
 		button_save = QPushButton(f"Save {self.field}")
 		button_save.clicked.connect(self.save_text)
@@ -47,7 +47,7 @@ class EditText(QDialog):
 		buttons.addWidget(button_discard)
 		
 		layout = QVBoxLayout(self)
-		layout.addWidget(QLabel(f"{self.field.title()} on {book_list[index].title} by {'; '.join(book_list[index].author)}", wordWrap=True))
+		layout.addWidget(QLabel(f"{self.field.title()} on {library[index].title} by {'; '.join(library[index].author)}", wordWrap=True))
 		layout.addWidget(self.text_box)		
 		layout.addLayout(buttons)
 		
@@ -57,7 +57,7 @@ class EditText(QDialog):
 		Save edited review, quotes or notes.
 		"""
 		
-		setattr(book_list[self.index], self.field, self.text_box.toPlainText())
-		self.parent.flag_unsaved_changes = True
-		self.parent.set_interface_outdated()
+		setattr(library[self.index], self.field, self.text_box.toPlainText())
+		self.main_window.flag_unsaved_changes = True
+		self.main_window.set_interface_outdated()
 		self.close()

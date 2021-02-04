@@ -9,12 +9,11 @@ from PyQt5.QtWidgets import (
 	QWidget,
 	)
 	
-from functions.date_formatting import date_to_split
 from functions.value_calculations import average
 from graphs.graphs_library import GraphsWindowLibraryStats
 from graphs.graphs_reading import GraphsWindowReadingTab
 from library.book_library import (
-	book_list, 
+	library, 
 	books_read_by_year_list, 
 	current_reading_list, 
 	gave_up_list, 
@@ -121,7 +120,7 @@ class ReadingTab(GenericMainWindowTab):
 		self.stats_dict['length_count'] = 0
 		self.stats_dict['length_sum'] = 0
 		
-		for index, book in enumerate(book_list):
+		for index, book in library.items():
 			if book.reading_status == 'Read':
 				self.stats_dict['count'] += 1
 				if book.rating:
@@ -220,26 +219,26 @@ class ReadingTab(GenericMainWindowTab):
 		
 		year_read_list.clear()
 		year_set = set()
-		for book in book_list:
+		for book in library.values():
 			if book.date_read:
-				year_set.add(date_to_split(book.date_read)[2])
+				year_set.add(str(book.date_read.year))
 		
 		year_dict = dict()
-		for year_ in year_set:
-			year_dict[year_] = [0, 0, 0, 0, 0]
+		for year in year_set:
+			year_dict[year] = [0, 0, 0, 0, 0]
 		year_dict["No Read Date"] = [0, 0, 0, 0, 0]
 		
-		for book in book_list:
+		for book in library.values():
 			if book.reading_status == 'Read':
 				try:
-					year_dict[date_to_split(book.date_read)[2]][0] += 1
+					year_dict[str(book.date_read.year)][0] += 1
 					if book.rating:
-						year_dict[date_to_split(book.date_read)[2]][1] += 1
-						year_dict[date_to_split(book.date_read)[2]][2] += int(book.rating)
+						year_dict[str(book.date_read.year)][1] += 1
+						year_dict[str(book.date_read.year)][2] += int(book.rating)
 					if book.num_pages:
-						year_dict[date_to_split(book.date_read)[2]][3] += 1
-						year_dict[date_to_split(book.date_read)[2]][4] += int(book.num_pages)
-				except KeyError:
+						year_dict[str(book.date_read.year)][3] += 1
+						year_dict[str(book.date_read.year)][4] += int(book.num_pages)
+				except AttributeError:
 					year_dict["No Read Date"][0] += 1
 					if book.rating:
 						year_dict["No Read Date"][1] += 1
@@ -277,14 +276,14 @@ class ReadingTab(GenericMainWindowTab):
 		"""
 		
 		books_read_by_year_list.clear()
-		for index_, book in enumerate(book_list):
-			if book.reading_status == 'Read':
-				if date_to_split(book.date_read)[2] == self.selected_year:
-					books_read_by_year_list.append(index_)
+		for index in library:
+			if library[index].reading_status == 'Read':
+				if library[index].date_read and str(library[index].date_read.year) == self.selected_year:
+					books_read_by_year_list.append(index)
 					
 				elif self.selected_year == "No Read Date":
-					if not book.date_read:
-						books_read_by_year_list.append(index_)
+					if not library[index].date_read:
+						books_read_by_year_list.append(index)
 				
 		self.books_by_year_read_table.refresh_table()
 		
@@ -294,7 +293,7 @@ class ReadingTab(GenericMainWindowTab):
 		Refreshes information widgets on books read tab.
 		"""
 		
-		if self.run_for_the_first_time == True:
+		if self.run_for_the_first_time:
 			self.run_for_the_first_time = False
 			
 			self.read_books_count_label = QLabel()

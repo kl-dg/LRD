@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import (
 	QWidget, 
 	)
 
-from library.book_library import book_list, search_list
+from library.book_library import library, search_list
 from mw_tabs.main_window_tab import GenericMainWindowTab
 from other_ui.cb_constructors import FieldDropDown
 from panel.refresh import refresh_panel
@@ -143,25 +143,26 @@ class SearchTab(GenericMainWindowTab):
 		"""
 		
 		search_list.clear()
+		
 		if len(self.current_search_input) > 0:
 			if self.current_search_case_sensitive:
 				if self.current_search_field.lower() != 'bookshelves' and self.current_search_field.lower() != 'author':
-					for index, book in enumerate(book_list):
-						if self.current_search_input in getattr(book, self.current_search_field.lower()):
+					for index in library:
+						if self.current_search_input in getattr(library[index], self.current_search_field.lower()):
 							search_list.append(index)
 				else:
-					for index, book in enumerate(book_list):
-						if self.current_search_input in "; ".join(getattr(book, self.current_search_field.lower())):
+					for index in library:
+						if self.current_search_input in "; ".join(getattr(library[index], self.current_search_field.lower())):
 							search_list.append(index)
 							
 			elif not self.current_search_case_sensitive:
 				if self.current_search_field.lower() != 'bookshelves' and self.current_search_field.lower() != 'author':
-					for index, book in enumerate(book_list):
-						if self.current_search_input.lower() in getattr(book, self.current_search_field.lower()).lower():
+					for index in library:
+						if self.current_search_input.lower() in getattr(library[index], self.current_search_field.lower()).lower():
 							search_list.append(index)
 				else:
-					for index, book in enumerate(book_list):
-						if self.current_search_input.lower() in "; ".join(getattr(book, self.current_search_field.lower())).lower():
+					for index in library:
+						if self.current_search_input.lower() in "; ".join(getattr(library[index], self.current_search_field.lower())).lower():
 							search_list.append(index)							
 		
 		self.search_table.refresh_table()

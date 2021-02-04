@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QTableWidgetItem
 
 from functions.string_formatting import get_int
-from library.book_library import book_list
+from library.book_library import library
 from panel.refresh import refresh_panel
 from tables.generic_table import GenericTable
 
@@ -51,7 +51,7 @@ class BookTable(GenericTable):
 		self.setColumnWidth(8,100)
 		
 		
-	def refresh_table(self, **args):
+	def refresh_table(self, **kwargs):
 		"""
 		Removes all books currently on table, then adds all books on
 		the refreshed source list.
@@ -60,15 +60,15 @@ class BookTable(GenericTable):
 		self.sort_table(self.current_sorting)
 		self.setRowCount(0)
 		for index in self.source_list:
-			title = QTableWidgetItem(book_list[index].title)
-			author = QTableWidgetItem('; '.join(book_list[index].author))
-			num_pages = QTableWidgetItem(book_list[index].num_pages)
-			rating = QTableWidgetItem(book_list[index].rating)
-			date_read = QTableWidgetItem(book_list[index].get_date_as_string('date_read', '%d/%b/%Y'))
-			reading_status = QTableWidgetItem(book_list[index].reading_status)
-			format_ = QTableWidgetItem(book_list[index].book_format)
-			publisher = QTableWidgetItem(book_list[index].publisher)
-			publication_year = QTableWidgetItem(book_list[index].edition_publication_year)
+			title = QTableWidgetItem(library[index].title)
+			author = QTableWidgetItem('; '.join(library[index].author))
+			num_pages = QTableWidgetItem(library[index].num_pages)
+			rating = QTableWidgetItem(library[index].rating)
+			date_read = QTableWidgetItem(library[index].get_date_as_string('date_read', '%d/%b/%Y'))
+			reading_status = QTableWidgetItem(library[index].reading_status)
+			format_ = QTableWidgetItem(library[index].book_format)
+			publisher = QTableWidgetItem(library[index].publisher)
+			publication_year = QTableWidgetItem(library[index].edition_publication_year)
 			
 			row = self.rowCount()
 			self.insertRow(row)
@@ -92,8 +92,8 @@ class BookTable(GenericTable):
 		
 		index = [index.row() for index in self.selectionModel().selectedRows()]
 		if index:
-			self.parent_tab.selected_book = book_list[self.source_list[index[0]]].static_index
-			refresh_panel(self.parent_tab)			
+			self.parent_tab.selected_book = self.source_list[index[0]]
+			refresh_panel(self.parent_tab)
 		
 		
 	def sort_table(self, mode):
@@ -104,22 +104,22 @@ class BookTable(GenericTable):
 		mode: column index and whether reverse order or not.
 		"""
 		
-		if mode == '0r': self.source_list.sort(key = lambda x: book_list[x].title.lower(), reverse=True)
-		elif mode == '0': self.source_list.sort(key = lambda x: book_list[x].title.lower())	
-		elif mode == '1r': self.source_list.sort(key = lambda x: book_list[x].author_sorted().lower(), reverse=True)
-		elif mode == '1': self.source_list.sort(key = lambda x: book_list[x].author_sorted().lower())
-		elif mode == '2r': self.source_list.sort(key = lambda x: get_int(book_list[x].num_pages), reverse=True)
-		elif mode == '2': self.source_list.sort(key = lambda x: get_int(book_list[x].num_pages))
-		elif mode == '3r': self.source_list.sort(key = lambda x: get_int(book_list[x].rating))
-		elif mode == '3': self.source_list.sort(key = lambda x: get_int(book_list[x].rating), reverse=True)
-		elif mode == '4r': self.source_list.sort(key = lambda x: book_list[x].date_sortable('date_read'))
-		elif mode == '4': self.source_list.sort(key = lambda x: book_list[x].date_sortable('date_read'), reverse=True)
-		elif mode == '5r': self.source_list.sort(key = lambda x: book_list[x].reading_status, reverse=True)
-		elif mode == '5': self.source_list.sort(key = lambda x: book_list[x].reading_status)
-		elif mode == '6r': self.source_list.sort(key = lambda x: book_list[x].book_format, reverse=True)
-		elif mode == '6': self.source_list.sort(key = lambda x: book_list[x].book_format)
-		elif mode == '7r': self.source_list.sort(key = lambda x: book_list[x].publisher.lower(), reverse=True)
-		elif mode == '7': self.source_list.sort(key = lambda x: book_list[x].publisher.lower())
-		elif mode == '8r': self.source_list.sort(key = lambda x: get_int(book_list[x].edition_publication_year), reverse=True)
-		elif mode == '8': self.source_list.sort(key = lambda x: get_int(book_list[x].edition_publication_year))
+		if mode == '0r': self.source_list.sort(key = lambda x: library[x].title.lower(), reverse=True)
+		elif mode == '0': self.source_list.sort(key = lambda x: library[x].title.lower())	
+		elif mode == '1r': self.source_list.sort(key = lambda x: library[x].author_sorted().lower(), reverse=True)
+		elif mode == '1': self.source_list.sort(key = lambda x: library[x].author_sorted().lower())
+		elif mode == '2r': self.source_list.sort(key = lambda x: get_int(library[x].num_pages), reverse=True)
+		elif mode == '2': self.source_list.sort(key = lambda x: get_int(library[x].num_pages))
+		elif mode == '3r': self.source_list.sort(key = lambda x: get_int(library[x].rating))
+		elif mode == '3': self.source_list.sort(key = lambda x: get_int(library[x].rating), reverse=True)
+		elif mode == '4r': self.source_list.sort(key = lambda x: library[x].date_sortable('date_read'))
+		elif mode == '4': self.source_list.sort(key = lambda x: library[x].date_sortable('date_read'), reverse=True)
+		elif mode == '5r': self.source_list.sort(key = lambda x: library[x].reading_status, reverse=True)
+		elif mode == '5': self.source_list.sort(key = lambda x: library[x].reading_status)
+		elif mode == '6r': self.source_list.sort(key = lambda x: library[x].book_format, reverse=True)
+		elif mode == '6': self.source_list.sort(key = lambda x: library[x].book_format)
+		elif mode == '7r': self.source_list.sort(key = lambda x: library[x].publisher.lower(), reverse=True)
+		elif mode == '7': self.source_list.sort(key = lambda x: library[x].publisher.lower())
+		elif mode == '8r': self.source_list.sort(key = lambda x: get_int(library[x].edition_publication_year), reverse=True)
+		elif mode == '8': self.source_list.sort(key = lambda x: get_int(library[x].edition_publication_year))
 		
