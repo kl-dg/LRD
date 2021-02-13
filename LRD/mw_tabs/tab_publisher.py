@@ -1,10 +1,10 @@
 from PyQt5.QtWidgets import QHBoxLayout, QPushButton, QVBoxLayout
 
 from library.book_library import (
-	library, 
 	books_by_publisher, 
 	publisher_list, 
 	)
+from library.queries import get_books_by_publisher
 from mw_tabs.main_window_tab import GenericMainWindowTab
 from panel.refresh import refresh_panel
 from panel.empty_panel import EmptyPanel
@@ -40,7 +40,7 @@ class PublisherTab(GenericMainWindowTab):
 	
 	def __init__(self, main_window):
 		super().__init__(main_window)
-		self.selected_publisher = None
+		
 		self.selected_book = None
 
 		self.publisher_table = PublisherTable(self, publisher_list)
@@ -51,7 +51,7 @@ class PublisherTab(GenericMainWindowTab):
 		button_edit_publisher.clicked.connect(self.clicked_edit_publisher)
 		
 		button_show_no_publisher = QPushButton("Show books without publisher")
-		button_show_no_publisher.clicked.connect(self.get_books_without_publisher)
+		button_show_no_publisher.clicked.connect(self.clicked_get_books_without_publisher)
 		
 		widgets_area = QVBoxLayout()
 		widgets_area.addWidget(button_edit_publisher)
@@ -79,7 +79,7 @@ class PublisherTab(GenericMainWindowTab):
 		
 		if self.is_outdated:
 			self.publisher_table.refresh_table()
-			self.get_books_by_publisher()
+			self.refresh_books_by_publisher_table()
 			refresh_panel(self)
 			self.is_outdated = False
 		
@@ -89,7 +89,8 @@ class PublisherTab(GenericMainWindowTab):
 		When user opens other library file, reset selected publisher
 		and selected book.
 		"""
-		self.selected_publisher = None
+		
+		self.publisher_table.selected_publisher = None
 		self.selected_book = None
 		
 		
@@ -100,43 +101,26 @@ class PublisherTab(GenericMainWindowTab):
 		attribute batch name editor dialog.
 		"""
 		
-		index = [index.row() for index in self.publisher_table.selectionModel().selectedRows()]
-		if index:
-			self.main_window.edit_attribute(publisher_list[index[0]]['title'], 'publisher')
+		if self.publisher_table.get_selected_publisher():
+			self.main_window.edit_attribute(self.publisher_table.get_selected_publisher(), 'publisher')
 			
 			
-	def get_publisher(self):
+	def clicked_get_books_without_publisher(self):
 		"""
-		Gets clicked publisher in publisher table and calls method
-		to get a list of its books.
-		"""
-		
-		index = [index.row() for index in self.publisher_table.selectionModel().selectedRows()]
-		if index:
-			self.selected_publisher = publisher_list[index[0]]['title']
-			self.get_books_by_publisher()
-			
-			
-	def get_books_without_publisher(self):
-		"""
-		In order to get a list of books wit han empty publisher 
+		In order to get a list of books with an empty publisher 
 		attribute, set an empty string to selected book and refresh
 		list of books by publisher.
 		"""
 		
-		self.selected_publisher = ""
-		self.get_books_by_publisher()
+		self.publisher_table.selected_publisher = ""
+		self.refresh_books_by_publisher_table()
 			
 			
-	def get_books_by_publisher(self):
+	def refresh_books_by_publisher_table(self):
 		"""
-		Refreshes list of books by selected publisher then call
-		<refresh_table> on books by publisher table.
+		Calls get_books_by_publisher() in order to get a list of books by the selected publisher
+		then refresh the table.
 		"""
 		
-		books_by_publisher.clear()
-		for index in library:
-			if library[index].publisher == self.selected_publisher:
-				books_by_publisher.append(index)
-				
+		get_books_by_publisher(self.publisher_table.selected_publisher)
 		self.books_by_publisher_table.refresh_table()
