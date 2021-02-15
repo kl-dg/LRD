@@ -3,6 +3,7 @@ from matplotlib.figure import Figure
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QScrollArea, QVBoxLayout, QWidget
 
+from graphs.pie_charts import books_in_series_vs_standalone_pie_chart
 from library.book_library import library
 
 
@@ -36,8 +37,7 @@ class GraphsWindowLibraryStats(QWidget):
 		v_scroll.setWidget(scrollable_content)
 		
 		if len(library) > 0:
-			standalone_vs_series = PieStandaloneSeries(standalone_books)
-			layout.addWidget(standalone_vs_series)
+			layout.addWidget(books_in_series_vs_standalone_pie_chart(*standalone_books))
 			
 			rating_bar_chart = BarRatingCount(rating_counts)
 			layout.addWidget(rating_bar_chart)
@@ -115,36 +115,6 @@ def count_books_by_binding():
 			count['labels'].pop(index)
 	
 	return count
-
-
-
-
-class PieStandaloneSeries(FigureCanvasQTAgg):
-	"""
-	Matplotlib pie chart displaying proportion of books in a series vs
-	standalone books.
-	
-	args:
-	content: 2-item list wit hamount of standalone books and books that 
-	are part of a series.
-	"""
-	
-	def __init__(self, content):
-		
-		figure = Figure(figsize=(8,5))
-		pie_chart = figure.add_subplot(111)
-		pie_chart.pie(
-			content, 
-			labels = ("Series", "Standalone"), 
-			autopct='%1.1f%%', 
-			shadow = True
-			)
-			
-		pie_chart.set_title("Books in series vs. standalone")
-		pie_chart.axis('equal')
-		
-		super().__init__(figure)
-		self.setMinimumSize(self.size())
 
 
 class BarRatingCount(FigureCanvasQTAgg):
