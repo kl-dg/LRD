@@ -34,3 +34,33 @@ def books_in_series_vs_standalone_pie_chart(in_series, standalone):
 	qt_figure.setMinimumSize(qt_figure.size())
 
 	return qt_figure
+
+
+def books_by_format_pie_chart(chart_data):
+	"""
+	Generates a matplotlib pie chart displaying proportion of books by format
+	(physical, ebook or audiobook).
+	
+	Parameter:
+	chart_data: must be a dictionary with two keys: 'labels' and 'counts', their values
+	must be two lists including only formats which book count is greater than zero. Labels
+	and their respective counts must be at the same index.
+	
+	Return: a FigureCanvasQTAgg object containing the plotted chart ready to be 
+	added to a PyQt GUI.
+	"""
+	
+	#Create a matplotlib figure
+	figure = Figure(figsize=(8,5))
+	
+	#Create pie chart
+	pie_chart = figure.add_subplot(111)
+	pie_chart.pie(chart_data['counts'], labels=chart_data['labels'], autopct='%1.1f%%', shadow = True)
+	pie_chart.set_title("Books by format")
+	pie_chart.axis('equal')
+
+	#Create Qt compatible figure
+	qt_figure = FigureCanvasQTAgg(figure)
+	qt_figure.setMinimumSize(qt_figure.size())
+	
+	return qt_figure

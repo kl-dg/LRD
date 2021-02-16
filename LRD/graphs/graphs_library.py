@@ -3,7 +3,11 @@ from matplotlib.figure import Figure
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QScrollArea, QVBoxLayout, QWidget
 
-from graphs.pie_charts import books_in_series_vs_standalone_pie_chart
+from graphs.pie_charts import (
+	books_in_series_vs_standalone_pie_chart,
+	books_by_format_pie_chart,
+	)
+	
 from library.book_library import library
 
 
@@ -23,7 +27,6 @@ class GraphsWindowLibraryStats(QWidget):
 		standalone_books = count_standalone_books()
 		rating_counts = count_rating()
 		book_length_hist_data = get_book_length_hist_data()
-		binding_counts = count_books_by_binding()
 		
 		layout = QVBoxLayout()
 		
@@ -45,8 +48,7 @@ class GraphsWindowLibraryStats(QWidget):
 			book_length = BarBookLength(book_length_hist_data)
 			layout.addWidget(book_length)
 			
-			binding_pie_chart = PieFormatCount(binding_counts)
-			layout.addWidget(binding_pie_chart)
+			layout.addWidget(books_by_format_pie_chart(count_books_by_binding()))
 		
 		
 
@@ -189,27 +191,5 @@ class BarBookLength(FigureCanvasQTAgg):
 				size=9
 				)
 		
-		super().__init__(figure)
-		self.setMinimumSize(self.size())
-
-
-
-class PieFormatCount(FigureCanvasQTAgg):
-	"""
-	Matplotlib pie chart displaying amount of books for each format -
-	physical, digital or audiobook.
-	
-	args:
-	content: dict with counts and labels lists of up to 3 items, 
-	relative to the existing book formats on the library.
-	"""
-	
-	def __init__(self, content):
-		figure = Figure(figsize=(8,5))
-		pie_chart = figure.add_subplot(111)
-		pie_chart.pie(content['counts'], labels=content['labels'], autopct='%1.1f%%', shadow = True)
-		pie_chart.set_title("Books by format")
-		pie_chart.axis('equal')
-
 		super().__init__(figure)
 		self.setMinimumSize(self.size())
