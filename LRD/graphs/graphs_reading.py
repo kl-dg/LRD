@@ -8,6 +8,7 @@ from functions.date_formatting import (
 	get_now_year,
 	)
 from functions.value_calculations import bar_chart_text_pos_h
+from graphs.pie_charts import books_by_reading_status_pie_chart
 from library.book_library import library, year_read_list
 
 
@@ -25,7 +26,6 @@ class GraphsWindowReadingTab(QWidget):
 		self.setWindowTitle("Reading progress in graphs")
 		
 		content = get_read_books_by_year()
-		library_composition = get_lib_composition()
 		
 		layout = QVBoxLayout()
 		
@@ -78,8 +78,7 @@ class GraphsWindowReadingTab(QWidget):
 				)
 			layout.addWidget(average_pages_read_day)
 			
-			library_composition_by_status = GraphLibraryCompositionByStatus(library_composition)
-			layout.addWidget(library_composition_by_status)
+			layout.addWidget(books_by_reading_status_pie_chart(get_lib_composition()))
 	
 	
 def count_books_read():
@@ -164,7 +163,6 @@ def get_lib_composition():
 	for book in library.values():
 		status_count_dict[book.reading_status] += 1
 	
-	
 	lib_composition_dict = dict()
 	lib_composition_dict['labels'] = []
 	lib_composition_dict['counts'] = []
@@ -217,25 +215,4 @@ class HorizontalBarChart(FigureCanvasQTAgg):
 					)
 			
 		super().__init__(figure)
-		self.setMinimumSize(self.size())
-
-
-class GraphLibraryCompositionByStatus(FigureCanvasQTAgg):
-	"""
-	Creates a matplotlib pie chart.
-	
-	args: 
-	content: dict with two lists, one for labels, other for values.
-	"""
-	
-	def __init__(self, content):
-		
-		figure = Figure(figsize=(8,5))
-		pie_chart = figure.add_subplot(111)
-		pie_chart.pie(content['counts'], labels = content['labels'], autopct='%1.1f%%', shadow = True)
-		pie_chart.set_title("Library composition by reading status")
-		pie_chart.axis('equal')
-		
-		super().__init__(figure)
-		self.setMinimumSize(self.size())
-		
+		self.setMinimumSize(self.size())	
