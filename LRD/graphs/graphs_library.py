@@ -3,6 +3,8 @@ from matplotlib.figure import Figure
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QScrollArea, QVBoxLayout, QWidget
 
+from graphs.bar_charts import books_by_length_histogram
+
 from graphs.pie_charts import (
 	books_in_series_vs_standalone_pie_chart,
 	books_by_format_pie_chart,
@@ -45,9 +47,7 @@ class GraphsWindowLibraryStats(QWidget):
 			rating_bar_chart = BarRatingCount(rating_counts)
 			layout.addWidget(rating_bar_chart)
 			
-			book_length = BarBookLength(book_length_hist_data)
-			layout.addWidget(book_length)
-			
+			layout.addWidget(books_by_length_histogram(get_book_length_hist_data()))
 			layout.addWidget(books_by_format_pie_chart(count_books_by_binding()))
 		
 		
@@ -137,53 +137,6 @@ class BarRatingCount(FigureCanvasQTAgg):
 		for index, value in enumerate(content):
 			bar_chart.text(
 				index - 0.1,
-				value + 0.01 * max(content),
-				str(value),
-				color='tab:blue',
-				fontweight='bold', 
-				size=9
-				)
-		
-		super().__init__(figure)
-		self.setMinimumSize(self.size())
-		
-		
-		
-class BarBookLength(FigureCanvasQTAgg):
-	"""
-	Matplotlib vertical bar chart displaying amount of books for book's
-	length in number of pages.
-	
-	args:
-	content: list representing histogram for the amount of books on each
-	bin.
-	"""
-	
-	def __init__(self, content):
-		figure = Figure(figsize=(8,7))
-		bar_chart = figure.add_subplot(111)
-		bar_chart.bar((
-			"0 - 99", 
-			"100 - 199", 
-			"200 - 299", 
-			"300 - 399", 
-			"400 - 499", 
-			"500 - 599", 
-			"600 - 699", 
-			"700 - 799", 
-			"800 - 899", 
-			"900 - 999", 
-			"1000 +"
-			), 
-			content, 
-			zorder=3)
-			
-		bar_chart.yaxis.grid(True, linestyle=':', zorder=0, alpha=0.3)
-		bar_chart.tick_params('x', labelrotation = 50)
-		bar_chart.set_title("Books by number of pages")
-		for index, value in enumerate(content):
-			bar_chart.text(
-				index - len(str(value)) * 0.1 + 0.05,
 				value + 0.01 * max(content),
 				str(value),
 				color='tab:blue',
