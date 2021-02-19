@@ -55,3 +55,38 @@ def books_by_length_histogram(bin_list):
 	qt_figure.setMinimumSize(qt_figure.size())
 	
 	return qt_figure
+
+
+def books_by_rating_vbar_chart(count_array):
+	"""
+	Generates a matplotlib vertical bar chart displaying the distribution
+	of book ratings.
+	
+	Parameter:
+	count_array: must be a list of five integers, index zero for one star to index four for
+	five stars count.
+	
+	Return: a FigureCanvasQTAgg object containing the plotted chart ready to be 
+	added to a PyQt GUI.
+	"""
+	
+	figure = Figure(figsize=(8,5))
+	bar_chart = figure.add_subplot(111)
+	bar_chart.bar(("1 star", "2 stars", "3 stars", "4 stars", "5 stars"), count_array, zorder=3)
+	bar_chart.yaxis.grid(True, linestyle=':', zorder=0, alpha=0.3)
+	bar_chart.set_title("Rating distribution")
+	for index, value in enumerate(count_array):
+		bar_chart.text(
+			index - 0.1,
+			value + 0.01 * max(count_array),
+			str(value),
+			color='tab:blue',
+			fontweight='bold', 
+			size=9
+			)
+	
+	#Create Qt compatible figure
+	qt_figure = FigureCanvasQTAgg(figure)
+	qt_figure.setMinimumSize(qt_figure.size())
+	
+	return qt_figure

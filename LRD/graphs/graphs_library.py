@@ -1,15 +1,8 @@
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
-from matplotlib.figure import Figure
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QScrollArea, QVBoxLayout, QWidget
 
-from graphs.bar_charts import books_by_length_histogram
-
-from graphs.pie_charts import (
-	books_in_series_vs_standalone_pie_chart,
-	books_by_format_pie_chart,
-	)
-	
+from graphs.bar_charts import books_by_length_histogram, books_by_rating_vbar_chart
+from graphs.pie_charts import books_in_series_vs_standalone_pie_chart, books_by_format_pie_chart
 from library.book_library import library
 
 
@@ -25,11 +18,7 @@ class GraphsWindowLibraryStats(QWidget):
 		self.setFixedSize(900, 720)
 		self.setWindowModality(Qt.ApplicationModal)
 		self.setWindowTitle("Library in graphs")
-		
-		standalone_books = count_standalone_books()
-		rating_counts = count_rating()
-		book_length_hist_data = get_book_length_hist_data()
-		
+				
 		layout = QVBoxLayout()
 		
 		scrollable_content = QWidget()
@@ -42,10 +31,9 @@ class GraphsWindowLibraryStats(QWidget):
 		v_scroll.setWidget(scrollable_content)
 		
 		if len(library) > 0:
-			layout.addWidget(books_in_series_vs_standalone_pie_chart(*standalone_books))
-			
-			rating_bar_chart = BarRatingCount(rating_counts)
-			layout.addWidget(rating_bar_chart)
+			layout.addWidget(books_in_series_vs_standalone_pie_chart(*count_standalone_books()))
+
+			layout.addWidget(books_by_rating_vbar_chart(count_rating()))
 			
 			layout.addWidget(books_by_length_histogram(get_book_length_hist_data()))
 			layout.addWidget(books_by_format_pie_chart(count_books_by_binding()))
@@ -117,32 +105,3 @@ def count_books_by_binding():
 			count['labels'].pop(index)
 	
 	return count
-
-
-class BarRatingCount(FigureCanvasQTAgg):
-	"""
-	Matplotlib vertical bar chart displaying the amount of books for
-	each rating value.
-	
-	args:
-	content: 5-item list with the amount of books for each rating score.
-	"""
-	
-	def __init__(self, content):
-		figure = Figure(figsize=(8,5))
-		bar_chart = figure.add_subplot(111)
-		bar_chart.bar(("1 star", "2 stars", "3 stars", "4 stars", "5 stars"), content, zorder=3)
-		bar_chart.yaxis.grid(True, linestyle=':', zorder=0, alpha=0.3)
-		bar_chart.set_title("Rating distribution")
-		for index, value in enumerate(content):
-			bar_chart.text(
-				index - 0.1,
-				value + 0.01 * max(content),
-				str(value),
-				color='tab:blue',
-				fontweight='bold', 
-				size=9
-				)
-		
-		super().__init__(figure)
-		self.setMinimumSize(self.size())
