@@ -1,13 +1,8 @@
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
-from matplotlib.figure import Figure
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QScrollArea, QVBoxLayout, QWidget 
 
-from functions.date_formatting import (
-	days_elapsed_from_january_first, 
-	get_now_year,
-	)
-from functions.value_calculations import bar_chart_text_pos_h
+from functions.date_formatting import days_elapsed_from_january_first, get_now_year
+from graphs.bar_charts import horizontal_bar_chart
 from graphs.pie_charts import books_by_reading_status_pie_chart
 from library.book_library import library, year_read_list
 
@@ -39,45 +34,16 @@ class GraphsWindowReadingTab(QWidget):
 		v_scroll.setWidget(scrollable_content)
 		
 		if count_books_read() > 0:
-			graph_books_by_year = HorizontalBarChart(
-				content['labels'], 
-				content['book_counts'], 
-				"Books read by year",
-				)
-				
-			layout.addWidget(graph_books_by_year)
-			
-			graph_pages_by_year = HorizontalBarChart(
-				content['labels'], 
-				content['pages'], 
-				"Total pages read by year",
-				)
-				
-			layout.addWidget(graph_pages_by_year)	
-			
-			average_length_by_year = HorizontalBarChart(
-				content['labels'], 
-				content['average_length'], 
-				"Average book length by year \n In what years did I read longer books?",
-				)
-			
-			layout.addWidget(average_length_by_year)
-			
-			average_rating_by_year = HorizontalBarChart(
-				content['labels'], 
-				content['average_rating'], 
-				"Average rating by year",
-				)
-				
-			layout.addWidget(average_rating_by_year)
-		
-			average_pages_read_day = HorizontalBarChart(
-				content['labels'], 
-				content['average_pages_day'], 
-				"Average pages read by day",
-				)
-			layout.addWidget(average_pages_read_day)
-			
+			layout.addWidget(horizontal_bar_chart(content['labels'], content['book_counts'], 
+				"Books read by year"))
+			layout.addWidget(horizontal_bar_chart(content['labels'], content['pages'],
+				"Total pages read by year"))	
+			layout.addWidget(horizontal_bar_chart(content['labels'], content['average_length'], 
+				"Average book length by year \n In what years did I read longer books?"))				
+			layout.addWidget(horizontal_bar_chart(content['labels'], content['average_rating'], 
+				"Average rating by year"))
+			layout.addWidget(horizontal_bar_chart(content['labels'], content['average_pages_day'], 
+				"Average pages read by day"))
 			layout.addWidget(books_by_reading_status_pie_chart(get_lib_composition()))
 	
 	
@@ -172,47 +138,3 @@ def get_lib_composition():
 		lib_composition_dict['counts'].append(count)
 		
 	return lib_composition_dict
-	
-		
-
-class HorizontalBarChart(FigureCanvasQTAgg):
-	"""
-	Creates a matplotlib horizontal bar chart.
-	
-	args: labels list, values list and title.
-	"""
-	
-	def __init__(self, labels, values, title):
-		figure = Figure(figsize=(8,len(labels)/3))
-		bar_chart = figure.add_subplot(111)
-		bar_chart.barh(labels, values, zorder=3)
-		bar_chart.xaxis.grid(True, linestyle=':', zorder=0, alpha=0.3)
-		bar_chart.set_title(title)
-		
-		max_value = max(values)
-		
-		for index, value in enumerate(values):
-			if value < max_value / 10:
-				bar_chart.text(
-					value, 
-					index, 
-					" "+str(value),
-					va='center', 
-					color='tab:blue', 
-					fontweight='bold', 
-					size=9
-					)
-					
-			elif value >= max_value / 10:
-				bar_chart.text(
-					bar_chart_text_pos_h(value, max_value),
-					index, 
-					str(value),
-					va='center', 
-					color='white', 
-					fontweight='bold', 
-					size=9
-					)
-			
-		super().__init__(figure)
-		self.setMinimumSize(self.size())	
