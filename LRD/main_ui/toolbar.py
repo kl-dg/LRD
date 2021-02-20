@@ -50,7 +50,7 @@ class ToolBar(QToolBar):
 		button_delete = QAction(self)
 		button_delete.setIcon(QIcon('icons/delete.png'))
 		button_delete.setIconText("Delete")
-		button_delete.triggered.connect(main_window.delete_book)
+		button_delete.triggered.connect(main_window.clicked_delete_book)
 		
 		button_import = QAction(self)
 		button_import.setIcon(QIcon('icons/import.png'))

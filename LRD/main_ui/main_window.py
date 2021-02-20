@@ -10,15 +10,8 @@ from PyQt5.QtWidgets import (
 	
 from main_ui.toolbar import ToolBar
 
-from library.book_library import (
-	library,
-	books_by_author_list, 
-	books_by_bookshelf_list,
-	books_by_publisher, 
-	books_by_series_or_collection, 
-	books_by_year_list,
-	search_list,
-	)
+from library.book_library import library
+from library.edit_library import delete_book
 	
 from library.file_io import (
 	write_to_file,
@@ -350,7 +343,7 @@ class MainWindow(QMainWindow):
 		return answer == QDialog.Accepted
 
 					
-	def delete_book(self):
+	def clicked_delete_book(self):
 		"""
 		Gets selected book, if there's a selected book and user
 		confirmed deletion, remove book and refresh UI.
@@ -359,7 +352,7 @@ class MainWindow(QMainWindow):
 		index = self.get_selected_book()
 		if index is not None:
 			if self.prompt_delete_book(index):
-				library.pop(index)
+				delete_book(index)
 				self.flag_unsaved_changes = True
 				self.set_interface_outdated()
 				self.refresh_current_tab()
@@ -381,7 +374,7 @@ class MainWindow(QMainWindow):
 		self.tab_reviews.is_outdated = True
 		self.tab_quotes.is_outdated = True
 		self.tab_notes.is_outdated = True
-				
+		
 				
 	def reset_tab_selections(self):
 		"""
@@ -407,36 +400,28 @@ class MainWindow(QMainWindow):
 		"""
 		
 		if self.main_window_tabs.currentIndex() == 0:
-			index = [index.row() for index in self.tab_library.table.selectionModel().selectedRows()]
-			if index: return self.tab_library.all_indexes[index[0]]
+			if self.tab_library.selected_book is not None: return self.tab_library.selected_book
 			
 		elif self.main_window_tabs.currentIndex() == 1:
-			index = [index.row() for index in self.tab_search.search_table.selectionModel().selectedRows()]
-			if index: return search_list[index[0]]
+			if self.tab_search.selected_book is not None: return self.tab_search.selected_book
 			
 		elif self.main_window_tabs.currentIndex() == 2:
-			index = [index.row() for index in self.tab_author.books_by_author_table.selectionModel().selectedRows()]
-			if index: return books_by_author_list[index[0]]
+			if self.tab_author.selected_book is not None: return self.tab_author.selected_book
 			
 		elif self.main_window_tabs.currentIndex() == 3:
-			index = [index.row() for index in self.tab_series.books_by_series_table.selectionModel().selectedRows()]
-			if index: return books_by_series_or_collection[index[0]]
+			if self.tab_series.selected_book is not None: return self.tab_series.selected_book
 				
 		elif self.main_window_tabs.currentIndex() == 4:
-			index = [index.row() for index in self.tab_publisher.books_by_publisher_table.selectionModel().selectedRows()]
-			if index: return books_by_publisher[index[0]]
+			if self.tab_publisher.selected_book is not None: return self.tab_publisher.selected_book
 				
 		elif self.main_window_tabs.currentIndex() == 5:
-			index = [index.row() for index in self.tab_publication_year.books_by_year_table.selectionModel().selectedRows()]
-			if index: return books_by_year_list[index[0]]
+			if self.tab_publication_year.selected_book is not None: return self.tab_publication_year.selected_book
 				
 		elif self.main_window_tabs.currentIndex() == 6:
-			if self.tab_reading_progress.selected_book is not None: 
-				if index: return self.tab_reading_progress.selected_book
+			if self.tab_reading_progress.selected_book is not None: return self.tab_reading_progress.selected_book
 				
 		elif self.main_window_tabs.currentIndex() == 7:
-			index = [index.row() for index in self.tab_bookshelves.books_by_bookshelf_table.selectionModel().selectedRows()]
-			if index: return books_by_bookshelf_list[index[0]]
+			if self.tab_bookshelves.selected_book is not None: return self.tab_bookshelves.selected_book
 		
 		
 	def permission_error_msgbox(self):
@@ -467,7 +452,7 @@ class MainWindow(QMainWindow):
 		there are unsaved changes, prompt user to save, discard or 
 		cancel. If user choose to save file, call this function
 		recursively to check if the saving process was successful, user
-		will prompted again if not.
+		will prompted again if it wasn't.
 		"""
 		
 		if self.flag_unsaved_changes:
