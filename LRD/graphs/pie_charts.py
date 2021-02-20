@@ -1,4 +1,3 @@
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 
 def books_in_series_vs_standalone_pie_chart(in_series, standalone):
@@ -28,12 +27,8 @@ def books_in_series_vs_standalone_pie_chart(in_series, standalone):
 		autopct='%1.1f%%', 
 		shadow = True
 		)
-	
-	#Create Qt compatible figure
-	qt_figure = FigureCanvasQTAgg(figure)
-	qt_figure.setMinimumSize(qt_figure.size())
 
-	return qt_figure
+	return figure
 
 
 def books_by_format_pie_chart(chart_data):
@@ -58,12 +53,8 @@ def books_by_format_pie_chart(chart_data):
 	pie_chart.pie(chart_data['counts'], labels=chart_data['labels'], autopct='%1.1f%%', shadow = True)
 	pie_chart.set_title("Books by format")
 	pie_chart.axis('equal')
-
-	#Create Qt compatible figure
-	qt_figure = FigureCanvasQTAgg(figure)
-	qt_figure.setMinimumSize(qt_figure.size())
 	
-	return qt_figure
+	return figure
 
 
 def books_by_reading_status_pie_chart(chart_data):
@@ -88,8 +79,4 @@ def books_by_reading_status_pie_chart(chart_data):
 	pie_chart.set_title("Library composition by reading status")
 	pie_chart.axis('equal')
 	
-	#Create Qt compatible figure
-	qt_figure = FigureCanvasQTAgg(figure)
-	qt_figure.setMinimumSize(qt_figure.size())
-	
-	return qt_figure
+	return figure

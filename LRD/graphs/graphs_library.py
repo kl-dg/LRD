@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QScrollArea, QVBoxLayout, QWidget
 from graphs.bar_charts import books_by_length_histogram, books_by_rating_vbar_chart
 from graphs.pie_charts import books_in_series_vs_standalone_pie_chart, books_by_format_pie_chart
 from library.book_library import library
-
+from other_ui.gui_aggregators import matplotlib_pyqt_agg
 
 class GraphsWindowLibraryStats(QWidget):
 	"""
@@ -31,12 +31,10 @@ class GraphsWindowLibraryStats(QWidget):
 		v_scroll.setWidget(scrollable_content)
 		
 		if len(library) > 0:
-			layout.addWidget(books_in_series_vs_standalone_pie_chart(*count_standalone_books()))
-
-			layout.addWidget(books_by_rating_vbar_chart(count_rating()))
-			
-			layout.addWidget(books_by_length_histogram(get_book_length_hist_data()))
-			layout.addWidget(books_by_format_pie_chart(count_books_by_binding()))
+			layout.addWidget(matplotlib_pyqt_agg(books_in_series_vs_standalone_pie_chart(*count_standalone_books())))
+			layout.addWidget(matplotlib_pyqt_agg(books_by_rating_vbar_chart(count_rating())))
+			layout.addWidget(matplotlib_pyqt_agg(books_by_length_histogram(get_book_length_hist_data())))
+			layout.addWidget(matplotlib_pyqt_agg(books_by_format_pie_chart(count_books_by_binding())))
 		
 		
 

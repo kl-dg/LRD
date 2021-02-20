@@ -1,4 +1,3 @@
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 
 from functions.value_calculations import bar_chart_text_pos_h
@@ -51,12 +50,8 @@ def books_by_length_histogram(bin_list):
 			fontweight='bold', 
 			size=9
 			)
-		
-	#Create Qt compatible figure
-	qt_figure = FigureCanvasQTAgg(figure)
-	qt_figure.setMinimumSize(qt_figure.size())
 	
-	return qt_figure
+	return figure
 
 
 def books_by_rating_vbar_chart(count_array):
@@ -92,11 +87,7 @@ def books_by_rating_vbar_chart(count_array):
 			size=9
 			)
 	
-	#Create Qt compatible figure
-	qt_figure = FigureCanvasQTAgg(figure)
-	qt_figure.setMinimumSize(qt_figure.size())
-	
-	return qt_figure
+	return figure
 	
 	
 def horizontal_bar_chart(labels, values, title):
@@ -148,9 +139,5 @@ def horizontal_bar_chart(labels, values, title):
 				fontweight='bold', 
 				size=9
 				)
-		
-	#Create Qt compatible figure
-	qt_figure = FigureCanvasQTAgg(figure)
-	qt_figure.setMinimumSize(qt_figure.size())
 	
-	return qt_figure
+	return figure

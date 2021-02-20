@@ -5,7 +5,7 @@ from functions.date_formatting import days_elapsed_from_january_first, get_now_y
 from graphs.bar_charts import horizontal_bar_chart
 from graphs.pie_charts import books_by_reading_status_pie_chart
 from library.book_library import library, year_read_list
-
+from other_ui.gui_aggregators import matplotlib_pyqt_agg
 
 class GraphsWindowReadingTab(QWidget):
 	"""
@@ -34,17 +34,17 @@ class GraphsWindowReadingTab(QWidget):
 		v_scroll.setWidget(scrollable_content)
 		
 		if count_books_read() > 0:
-			layout.addWidget(horizontal_bar_chart(content['labels'], content['book_counts'], 
-				"Books read by year"))
-			layout.addWidget(horizontal_bar_chart(content['labels'], content['pages'],
-				"Total pages read by year"))	
-			layout.addWidget(horizontal_bar_chart(content['labels'], content['average_length'], 
-				"Average book length by year \n In what years did I read longer books?"))				
-			layout.addWidget(horizontal_bar_chart(content['labels'], content['average_rating'], 
-				"Average rating by year"))
-			layout.addWidget(horizontal_bar_chart(content['labels'], content['average_pages_day'], 
-				"Average pages read by day"))
-			layout.addWidget(books_by_reading_status_pie_chart(get_lib_composition()))
+			layout.addWidget(matplotlib_pyqt_agg(horizontal_bar_chart(content['labels'], content['book_counts'], 
+				"Books read by year")))
+			layout.addWidget(matplotlib_pyqt_agg(horizontal_bar_chart(content['labels'], content['pages'],
+				"Total pages read by year")))	
+			layout.addWidget(matplotlib_pyqt_agg(horizontal_bar_chart(content['labels'], content['average_length'], 
+				"Average book length by year \n In what years did I read longer books?")))			
+			layout.addWidget(matplotlib_pyqt_agg(horizontal_bar_chart(content['labels'], content['average_rating'], 
+				"Average rating by year")))
+			layout.addWidget(matplotlib_pyqt_agg(horizontal_bar_chart(content['labels'], content['average_pages_day'], 
+				"Average pages read by day")))
+			layout.addWidget(matplotlib_pyqt_agg(books_by_reading_status_pie_chart(get_lib_composition())))
 	
 	
 def count_books_read():
