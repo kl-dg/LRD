@@ -375,7 +375,7 @@ class MainWindow(QMainWindow):
 		self.tab_quotes.is_outdated = True
 		self.tab_notes.is_outdated = True
 		
-				
+		
 	def reset_tab_selections(self):
 		"""
 		Reset UI when user starts a new library or open another library

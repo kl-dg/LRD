@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import (
 	)
 
 from library.book_library import library
+from library.edit_library import edit_text_attribute
 
 class EditText(QDialog):
 	"""
@@ -57,7 +58,7 @@ class EditText(QDialog):
 		Save edited review, quotes or notes.
 		"""
 		
-		setattr(library[self.index], self.field, self.text_box.toPlainText())
+		edit_text_attribute(self.index, self.field, self.text_box.toPlainText())
 		self.main_window.flag_unsaved_changes = True
 		self.main_window.set_interface_outdated()
 		self.close()
