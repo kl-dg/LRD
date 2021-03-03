@@ -38,7 +38,7 @@ class EditText(QDialog):
 		self.text_box.setText(getattr(library[index], self.field))
 
 		button_save = QPushButton(f"Save {self.field}")
-		button_save.clicked.connect(self.save_text)
+		button_save.clicked.connect(self.clicked_save_text)
 		
 		button_discard = QPushButton("Discard changes")
 		button_discard.clicked.connect(self.close)
@@ -53,7 +53,7 @@ class EditText(QDialog):
 		layout.addLayout(buttons)
 		
 		
-	def save_text(self):
+	def clicked_save_text(self):
 		"""
 		Save edited review, quotes or notes.
 		"""

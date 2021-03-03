@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QTableWidgetItem
 
+from library.book_library import publisher_list
 from tables.generic_table import GenericTable
 
 
@@ -11,16 +12,13 @@ class PublisherTable(GenericTable):
 	get_clicked_publisher: function to get selected publisher in order
 	to get a list of its books.
 	
-	publisher_list: list with contents that'll be added to table.
-	
 	attributes:
 	self.current_sorting: column selected for sorting table.
 	"""
 	
-	def __init__(self, parent_tab, publisher_list):
+	def __init__(self, parent_tab):
 		super().__init__(column_count = 3)
 		self.parent_tab = parent_tab
-		self.publisher_list = publisher_list
 		self.current_sorting = '1'
 		self.selected_publisher = None
 		
@@ -34,6 +32,7 @@ class PublisherTable(GenericTable):
 		self.setColumnWidth(1,50)
 		self.setColumnWidth(2,100)	
 		
+		
 	def get_selected_publisher(self):
 		"""
 		Returns name of the selected publisher if there's a selected publisher.
@@ -41,7 +40,8 @@ class PublisherTable(GenericTable):
 		
 		index = [index.row() for index in self.selectionModel().selectedRows()]
 		if index:
-			return self.publisher_list[index[0]]['title']
+			return publisher_list[index[0]]['title']
+			
 			
 	def publisher_selection_changed(self):
 		"""
@@ -61,10 +61,10 @@ class PublisherTable(GenericTable):
 		"""
 		
 		if not sorting:
-			self.parent_tab.get_list_by_attribute(self.publisher_list, 'publisher')
+			self.parent_tab.get_list_by_attribute(publisher_list, 'publisher')
 		self.sort_table(self.current_sorting)
 		self.setRowCount(0)
-		for entry in self.publisher_list:
+		for entry in publisher_list:
 			publisher = QTableWidgetItem(entry['title'])
 			book_count = QTableWidgetItem(str(entry['book_count']))
 			average_rating = QTableWidgetItem(entry['average_rating'])
@@ -84,9 +84,9 @@ class PublisherTable(GenericTable):
 		mode: column index and whether reverse order or not.
 		"""
 		
-		if mode == '0r': self.publisher_list.sort(key = lambda x: x['title'].lower(), reverse=True)
-		elif mode == '0': self.publisher_list.sort(key = lambda x: x['title'].lower())	
-		elif mode == '1r': self.publisher_list.sort(key = lambda x: x['book_count'])
-		elif mode == '1': self.publisher_list.sort(key = lambda x: x['book_count'], reverse=True)
-		elif mode == '2r': self.publisher_list.sort(key = lambda x: float(x['average_rating']), reverse=True)
-		elif mode == '2': self.publisher_list.sort(key = lambda x: float(x['average_rating']))
+		if mode == '0r': publisher_list.sort(key = lambda x: x['title'].lower(), reverse=True)
+		elif mode == '0': publisher_list.sort(key = lambda x: x['title'].lower())	
+		elif mode == '1r': publisher_list.sort(key = lambda x: x['book_count'])
+		elif mode == '1': publisher_list.sort(key = lambda x: x['book_count'], reverse=True)
+		elif mode == '2r': publisher_list.sort(key = lambda x: float(x['average_rating']), reverse=True)
+		elif mode == '2': publisher_list.sort(key = lambda x: float(x['average_rating']))

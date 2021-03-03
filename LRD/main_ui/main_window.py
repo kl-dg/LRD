@@ -8,17 +8,6 @@ from PyQt5.QtWidgets import (
 	QWidget,
 	)
 	
-from main_ui.toolbar import ToolBar
-
-from library.book_library import library
-from library.edit_library import delete_book
-	
-from library.file_io import (
-	write_to_file,
-	load_file,
-	import_from_file,
-	)
-
 from dialogs.close_program import AskSaveBeforeQuit
 from dialogs.edit_attribute import EditValueByAttribute
 from dialogs.edit_book import EditBook
@@ -26,6 +15,9 @@ from dialogs.delete_book import DeleteBook
 from dialogs.import_assistant import ImportAssistant 
 from dialogs.new_file import ConfirmNewLibrary
 from dialogs.quick_text_editor import EditText
+from library.edit_library import delete_book, reset_library
+from library.file_io import write_to_file, load_file, import_from_file
+from main_ui.toolbar import ToolBar
 from mw_tabs.tab_library import LibraryTab
 from mw_tabs.tab_search import SearchTab
 from mw_tabs.tab_author import AuthorTab
@@ -136,7 +128,7 @@ class MainWindow(QMainWindow):
 			self.confirm_new_library = ConfirmNewLibrary(self, 'new')
 			self.confirm_new_library.exec_()
 		else:
-			library.clear()
+			reset_library()
 			self.working_file = ""
 			self.reset_tab_selections()
 			self.set_interface_outdated()
@@ -170,7 +162,7 @@ class MainWindow(QMainWindow):
 				"",
 				"CSV Files (*.csv)")
 			if file_path[0]:
-				library.clear()
+				reset_library()
 	
 				load_file(file_path[0])
 				self.set_interface_outdated()

@@ -1,5 +1,15 @@
 from library.book_library import library
 
+def delete_book(index):
+	"""
+	Deletes a book from the library.
+	
+	Parameter:
+	index: book's index in the library.
+	"""
+	
+	library.pop(index)
+	
 
 def edit_text_attribute(index, attribute, text):
 	"""
@@ -16,12 +26,11 @@ def edit_text_attribute(index, attribute, text):
 	setattr(library[index], attribute, text)
 
 
-def delete_book(index):
+def reset_library():
 	"""
-	Deletes a book from the library.
+	Remove all books from the library.
 	
-	Parameter:
-	index: book's index in the library.
+	Common uses: before loading a new library file or before starting a new library.
 	"""
 	
-	library.pop(index)
+	library.clear()

@@ -1,9 +1,6 @@
 from PyQt5.QtWidgets import QHBoxLayout, QPushButton, QVBoxLayout
 
-from library.book_library import (
-	books_by_publisher, 
-	publisher_list, 
-	)
+from library.book_library import books_by_publisher
 from library.queries import get_books_by_publisher
 from mw_tabs.main_window_tab import GenericMainWindowTab
 from panel.refresh import refresh_panel
@@ -43,7 +40,7 @@ class PublisherTab(GenericMainWindowTab):
 		
 		self.selected_book = None
 
-		self.publisher_table = PublisherTable(self, publisher_list)
+		self.publisher_table = PublisherTable(self)
 		self.books_by_publisher_table = BookTable(self, books_by_publisher)
 		self.panel = EmptyPanel()
 		

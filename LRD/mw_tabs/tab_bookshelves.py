@@ -1,11 +1,7 @@
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout
-	
-from functions.value_calculations import average
-from library.book_library import (
-	bookshelves_list, 
-	library, 
-	books_by_bookshelf_list, 
-	)
+
+from library.book_library import books_by_bookshelf_list
+from library.queries import get_books_by_bookshelf
 from mw_tabs.main_window_tab import GenericMainWindowTab
 from panel.refresh import refresh_panel
 from panel.empty_panel import EmptyPanel
@@ -28,19 +24,15 @@ class BookshelvesTab(GenericMainWindowTab):
 	main_window: parent reference for using its methods.
 	
 	attributes:
-	self.selected_bookshelf: selected bookshelf by user, of which books
-	will be shown in books by bookshelf table.
-	
 	self.selected_book: last book selected by user, which information
 	will be displayed in Info Panel.
 	"""
 	
 	def __init__(self, main_window):
 		super().__init__(main_window)
-		self.selected_bookshelf = None
 		self.selected_book = None
 		
-		self.bookshelves_table = BookshelvesTable(self, bookshelves_list)
+		self.bookshelves_table = BookshelvesTable(self)
 		
 		bookshelves_table_area = QHBoxLayout()
 		bookshelves_table_area.addWidget(self.bookshelves_table)
@@ -67,7 +59,7 @@ class BookshelvesTab(GenericMainWindowTab):
 		
 		if self.is_outdated:
 			self.bookshelves_table.refresh_table()
-			self.get_books_by_bookshelf()
+			self.refresh_books_by_bookshelf_table()
 			refresh_panel(self)
 			self.is_outdated = False
 		
@@ -78,69 +70,15 @@ class BookshelvesTab(GenericMainWindowTab):
 		selected book.
 		"""
 		
-		self.selected_bookshelf = None
+		self.bookshelves_table.selected_bookshelf = None
 		self.selected_book = None
 		
 		
-	def get_list_by_attribute(self):
+	def refresh_books_by_bookshelf_table(self):
 		"""
-		Fills bookshelves list with all unique bookshelves, books 
-		counts, average rating and length.
-		"""
-		
-		bookshelves_list.clear()
-		
-		bookshelves_set = set()
-		for book in library.values():
-			if len(book.bookshelves) > 1 or book.bookshelves[0]:
-				for shelf in book.bookshelves:
-					bookshelves_set.add(shelf)
-					
-		bookshelves_dict = dict()
-		for shelf in bookshelves_set:
-			bookshelves_dict[shelf] = [0, 0, 0, 0, 0]
-			
-		for book in library.values():
-			if len(book.bookshelves) > 1 or book.bookshelves[0]:
-				for shelf in book.bookshelves:
-					bookshelves_dict[shelf][0] += 1
-					if book.rating:
-						bookshelves_dict[shelf][1] += int(book.rating)
-						bookshelves_dict[shelf][2] += 1
-					if book.num_pages:
-						bookshelves_dict[shelf][3] += int(book.num_pages)
-						bookshelves_dict[shelf][4] += 1
-						
-		for key, value in bookshelves_dict.items():
-			bookshelves_list.append(dict(
-				bookshelf = key,
-				book_count = value[0],
-				average_rating = f"{average(value[1], value[2]):.2f}",
-				average_length = f"{average(value[3], value[4]):.2f}",
-				))
-		
-		
-	def get_selected_bookshelf(self):
-		"""
-		Gets selected shelf and calls function to get a list of books
-		with a matching bookshelf attribute.
+		Calls get_books_by_bookshelf() to refresh the list of books by selected bookshelf then
+		refresh the books by bookshelf table.
 		"""
 		
-		index = [index.row() for index in self.bookshelves_table.selectionModel().selectedRows()]
-		if index:
-			self.selected_bookshelf = bookshelves_list[index[0]]['bookshelf']
-			self.get_books_by_bookshelf()
-			
-			
-	def get_books_by_bookshelf(self):
-		"""
-		Gets a list of books with a bookshelf attribute that matches 
-		user's selection, then calls <refresh_table> on books by
-		selected bookshelf table.
-		"""
-		
-		books_by_bookshelf_list.clear()
-		
-		[books_by_bookshelf_list.append(index) for index in library if self.selected_bookshelf in library[index].bookshelves]
-
+		get_books_by_bookshelf(self.bookshelves_table.selected_bookshelf)
 		self.books_by_bookshelf_table.refresh_table()
