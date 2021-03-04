@@ -20,31 +20,27 @@ def get_bookshelves_list():
 	#Clear current list of bookshelves
 	bookshelves_list.clear()
 	
-	#Make a set with all unique bookshelves' names
-	bookshelves_set = set()
-	for book in library.values():
-		if len(book.bookshelves) > 1 or book.bookshelves[0]:
-			for shelf in book.bookshelves:
-				bookshelves_set.add(shelf)
-	
-	#Make a dictionary to hold information about each bookshelf
+	#Temporary dictionary for bookshelves stats
 	bookshelves_dict = dict()
-	for shelf in bookshelves_set:
-		bookshelves_dict[shelf] = [0, 0, 0, 0, 0]
-		
-	#Loop through the library in order to get book count, average rating and page count for each bookshelf
+	
+	#Loop through the library to get all unique shelves and their stats
 	for book in library.values():
-		if len(book.bookshelves) > 1 or book.bookshelves[0]:
-			for shelf in book.bookshelves:
-				bookshelves_dict[shelf][0] += 1
-				if book.rating:
-					bookshelves_dict[shelf][1] += int(book.rating)
-					bookshelves_dict[shelf][2] += 1
-				if book.num_pages:
-					bookshelves_dict[shelf][3] += int(book.num_pages)
-					bookshelves_dict[shelf][4] += 1
-					
-	#Add bookshelf dictionary to bookshelves list
+		for shelf in book.bookshelves:
+			
+			#If shelf not yet in bookshelves dict, add it
+			if shelf not in bookshelves_dict:
+				bookshelves_dict[shelf] = [0] * 5
+			
+			#Add bookshelves stats to dictionary
+			bookshelves_dict[shelf][0] += 1
+			if book.rating:
+				bookshelves_dict[shelf][1] += int(book.rating)
+				bookshelves_dict[shelf][2] += 1
+			if book.num_pages:
+				bookshelves_dict[shelf][3] += int(book.num_pages)
+				bookshelves_dict[shelf][4] += 1
+				
+	#Add bookshelf dictionary to bookshelves list. Calculate average stats on the fly
 	for key, value in bookshelves_dict.items():
 		bookshelves_list.append(dict(
 			bookshelf = key,
