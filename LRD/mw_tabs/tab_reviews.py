@@ -13,11 +13,11 @@ from PyQt5.QtWidgets import (
 from functions.string_formatting import get_int
 from library.book_library import reviews_list, quotes_list, notes_list, library
 from library.queries import get_books_with_text
-from mw_tabs.main_window_tab import GenericMainWindowTab
+from main_ui.main_window_proxy import main_window
 from other_ui.cb_constructors import SortReviewsDropDown
 
 
-class TextPageTab(GenericMainWindowTab):
+class TextPageTab(QWidget):
 	"""
 	Reusable layout for Reviews, Quaotes and Notes tabs on main window.
 	
@@ -33,14 +33,13 @@ class TextPageTab(GenericMainWindowTab):
 	
 	self.text_boxes_area_layout: <self.text_boxes_area> layout.
 	
-	args:
-	main_window: parent reference for using its methods.
-	
+	args:	
 	attribute: tab content. Either 'review', 'quotes' or 'notes'.
 	"""
 	
-	def __init__(self, main_window, attribute):
-		super().__init__(main_window)
+	def __init__(self, attribute):
+		super().__init__()
+		self.is_outdated = True
 		self.attribute = attribute
 		
 		#This constructor can handle review, quotes and notes tabs. There's a specific list for each of these
@@ -126,7 +125,7 @@ class TextPageTab(GenericMainWindowTab):
 		index: book's static library index.
 		"""
 		
-		self.main_window.get_quick_text_editor(attribute, index)
+		main_window.get_quick_text_editor(attribute, index)
 		self.refresh_interface()
 		
 	

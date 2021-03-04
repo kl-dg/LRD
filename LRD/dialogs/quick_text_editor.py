@@ -1,15 +1,9 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (
-	QDialog, 
-	QHBoxLayout,
-	QLabel, 
-	QPushButton,
-	QTextEdit, 
-	QVBoxLayout, 
-	)
+from PyQt5.QtWidgets import QDialog, QHBoxLayout, QLabel, QPushButton, QTextEdit, QVBoxLayout
 
 from library.book_library import library
 from library.edit_library import edit_text_attribute
+from main_ui.main_window_proxy import main_window
 
 class EditText(QDialog):
 	"""
@@ -23,11 +17,10 @@ class EditText(QDialog):
 	field: attribute to be edited, either 'review', 'quotes' or 'notes'.
 	"""
 	
-	def __init__(self, index, field, main_window):
+	def __init__(self, index, field):
 		super().__init__()
 		self.index = index
 		self.field = field
-		self.main_window = main_window
 		
 		self.resize(600, 600)
 		self.setWindowFlags(Qt.WindowCloseButtonHint)
@@ -59,6 +52,6 @@ class EditText(QDialog):
 		"""
 		
 		edit_text_attribute(self.index, self.field, self.text_box.toPlainText())
-		self.main_window.flag_unsaved_changes = True
-		self.main_window.set_interface_outdated()
+		main_window.flag_unsaved_changes = True
+		main_window.set_interface_outdated()
 		self.close()

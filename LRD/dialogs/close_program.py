@@ -1,13 +1,8 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import (
-	QDialog,
-	QHBoxLayout,
-	QLabel,
-	QPushButton,
-	QVBoxLayout,
-	)
-	
+from PyQt5.QtWidgets import QDialog, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
+
+from main_ui.main_window_proxy import main_window
 
 class AskSaveBeforeQuit(QDialog):
 	"""
@@ -33,9 +28,8 @@ class AskSaveBeforeQuit(QDialog):
 	attributes.
 	"""
 	
-	def __init__(self, main_window):
+	def __init__(self):
 		super().__init__()
-		self.main_window = main_window
 		self.resize(300, 100)
 		self.setWindowFlags(Qt.WindowCloseButtonHint)
 		self.setWindowIcon(QIcon('icons/save.png'))
@@ -72,5 +66,5 @@ class AskSaveBeforeQuit(QDialog):
 		answer: event action on user's choice.
 		"""
 		
-		self.main_window.answer_close = answer
+		main_window.answer_close = answer
 		self.close()

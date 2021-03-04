@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import (
 	QHBoxLayout, 
 	QPushButton,
 	QVBoxLayout, 
+	QWidget,
 	)
 
 from library.book_library import (
@@ -10,15 +11,15 @@ from library.book_library import (
 	collection_list, 
 	series_list, 
 	)
-	 
-from mw_tabs.main_window_tab import GenericMainWindowTab
+
+from main_ui.main_window_proxy import main_window
 from panel.refresh import refresh_panel
 from panel.empty_panel import EmptyPanel
 from tables.book_table import BookTable
 from tables.series_table import SeriesTable
 
 
-class SeriesTab(GenericMainWindowTab):
+class SeriesTab(QWidget):
 	"""
 	Layout for Series tab in main window.
 	
@@ -30,9 +31,7 @@ class SeriesTab(GenericMainWindowTab):
 	tables on top, widget button on center, books b yseries or 
 	collections on bottom.
 	
-	args:
-	main_window: parent reference for using its methods.
-	
+	args:	
 	attributes:
 	self.selected_series: last clicked series, which books will be
 	displayed in books by series table.
@@ -46,8 +45,9 @@ class SeriesTab(GenericMainWindowTab):
 	self.selected_book: last book clicked, for displaying in Info Panel.
 	"""
 	
-	def __init__(self, main_window):
-		super().__init__(main_window)
+	def __init__(self):
+		super().__init__()
+		self.is_outdated = True
 		self.selected_series = None
 		self.selected_collection = None
 		self.current_table = None
@@ -135,7 +135,7 @@ class SeriesTab(GenericMainWindowTab):
 		
 		index = [index.row() for index in table.selectionModel().selectedRows()]
 		if index: 
-			self.main_window.edit_attribute(list_[index[0]]['title'], attribute)
+			main_window.edit_attribute(list_[index[0]]['title'], attribute)
 		
 				
 	def get_standalone_books(self):

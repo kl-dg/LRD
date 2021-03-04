@@ -1,23 +1,19 @@
-from PyQt5.QtWidgets import QHBoxLayout
+from PyQt5.QtWidgets import QHBoxLayout, QWidget
 
 from library.book_library import library
-from mw_tabs.main_window_tab import GenericMainWindowTab
 from panel.refresh import refresh_panel
 from panel.empty_panel import EmptyPanel
 from tables.book_table import BookTable
 
 
-class LibraryTab(GenericMainWindowTab):
+class LibraryTab(QWidget):
 	"""
 	Layout for Library Tab in main window.
 	
 	Tab layout:
 	self.layout: splits screen in half, left side for Info
 	Panel, left side a table to display all books in the library.
-	
-	args:
-	main_window: parent reference for using its methods.
-	
+
 	attributes:
 	self.selected_book: last book clicked, for displaying in Info Panel.
 	
@@ -25,8 +21,9 @@ class LibraryTab(GenericMainWindowTab):
 	must have indexes for the entire library.
 	"""
 	
-	def __init__(self, main_window):
-		super().__init__(main_window)
+	def __init__(self):
+		super().__init__()
+		self.is_outdated = True
 		self.selected_book = None
 		self.all_indexes = []
 		

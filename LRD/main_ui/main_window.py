@@ -18,6 +18,7 @@ from dialogs.quick_text_editor import EditText
 from library.edit_library import delete_book, reset_library
 from library.file_io import write_to_file, load_file, import_from_file
 from main_ui.toolbar import ToolBar
+from main_ui.main_window_proxy import main_window as main_window_proxy
 from mw_tabs.tab_library import LibraryTab
 from mw_tabs.tab_search import SearchTab
 from mw_tabs.tab_author import AuthorTab
@@ -42,22 +43,24 @@ class MainWindow(QMainWindow):
 		self.setWindowTitle("Library Rat's Diary")
 		self.resize(1280, 720)
 		
+		main_window_proxy.wrapped_object = self
+		
 		#Toolbar
-		toolbar = ToolBar(self)
+		toolbar = ToolBar()
 		self.addToolBar(toolbar)
 		
 		#Declaring and adding tabs
-		self.tab_library = LibraryTab(self)
-		self.tab_search = SearchTab(self)
-		self.tab_author = AuthorTab(self)
-		self.tab_series = SeriesTab(self)
-		self.tab_publisher = PublisherTab(self)
-		self.tab_publication_year = PublishingYearTab(self)
-		self.tab_reading_progress = ReadingTab(self)
-		self.tab_bookshelves = BookshelvesTab(self)
-		self.tab_reviews = TextPageTab(self, 'review')
-		self.tab_quotes = TextPageTab(self, 'quotes')
-		self.tab_notes = TextPageTab(self, 'notes')
+		self.tab_library = LibraryTab()
+		self.tab_search = SearchTab()
+		self.tab_author = AuthorTab()
+		self.tab_series = SeriesTab()
+		self.tab_publisher = PublisherTab()
+		self.tab_publication_year = PublishingYearTab()
+		self.tab_reading_progress = ReadingTab()
+		self.tab_bookshelves = BookshelvesTab()
+		self.tab_reviews = TextPageTab('review')
+		self.tab_quotes = TextPageTab('quotes')
+		self.tab_notes = TextPageTab('notes')
 		
 		self.main_window_tabs = QTabWidget()
 		self.main_window_tabs.addTab(self.tab_library, "Library")
@@ -125,7 +128,7 @@ class MainWindow(QMainWindow):
 		"""
 		
 		if self.flag_unsaved_changes == True:
-			self.confirm_new_library = ConfirmNewLibrary(self, 'new')
+			self.confirm_new_library = ConfirmNewLibrary('new')
 			self.confirm_new_library.exec_()
 		else:
 			reset_library()
@@ -143,7 +146,7 @@ class MainWindow(QMainWindow):
 		"""
 		
 		if self.flag_unsaved_changes == True:
-			self.ask_open_file = ConfirmNewLibrary(self, 'open')
+			self.ask_open_file = ConfirmNewLibrary('open')
 			self.ask_open_file.exec_()
 		else:
 			self.open_file()
@@ -181,7 +184,7 @@ class MainWindow(QMainWindow):
 		Opens import assistant dialog with importing options.
 		"""
 		
-		self.import_assistant = ImportAssistant(self)
+		self.import_assistant = ImportAssistant()
 		self.import_assistant.show()
 						
 					
@@ -273,7 +276,7 @@ class MainWindow(QMainWindow):
 		refresh UI.
 		"""
 		
-		self.add_book_ = EditBook(self)
+		self.add_book_ = EditBook()
 		self.add_book_.show()
 		
 		
@@ -282,10 +285,10 @@ class MainWindow(QMainWindow):
 		Calls EditBook dialog for editing selected book, if there's a
 		selected book. Then refresh UI.
 		"""
-		
+
 		index = self.get_selected_book()
 		if index is not None:
-			self.edit_book_ = EditBook(self, index)
+			self.edit_book_ = EditBook(index)
 			self.edit_book_.show()
 			
 			
@@ -300,7 +303,7 @@ class MainWindow(QMainWindow):
 		"""
 		   
 		if index is not None:
-			self.quick_text_editor = EditText(index, mode, self)
+			self.quick_text_editor = EditText(index, mode)
 			self.quick_text_editor.exec_()
 			
 			
@@ -316,7 +319,7 @@ class MainWindow(QMainWindow):
 		'series'.
 		"""
 		
-		self.edit_attribute_ = EditValueByAttribute(value, attribute, self)
+		self.edit_attribute_ = EditValueByAttribute(value, attribute)
 		self.edit_attribute_.exec_()
 		self.refresh_current_tab()
 			

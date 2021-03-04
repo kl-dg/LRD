@@ -14,7 +14,7 @@ def refresh_panel(tab):
 		if tab.selected_book is not None:
 			reset_panel(tab)
 			tab.panel = EmptyPanel()
-			tab.panel_form = InfoPanel(tab.selected_book, tab.main_window)
+			tab.panel_form = InfoPanel(tab.selected_book)
 			tab.panel.setLayout(tab.panel_form)
 			tab.layout.addWidget(tab.panel)
 			return

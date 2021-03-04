@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QFormLayout, QLabel, QHBoxLayout, QPushButton
 
 from functions.string_formatting import to_rating_cb, get_int
 from library.book_library import library
+from main_ui.main_window_proxy import main_window
 									  
 
 class InfoPanel(QFormLayout):
@@ -15,7 +16,7 @@ class InfoPanel(QFormLayout):
 	"""
 	
 	
-	def __init__(self, index, main_window):
+	def __init__(self, index):
 		super().__init__()
 		self.setSpacing(10)
 		
@@ -125,7 +126,7 @@ class InfoPanel(QFormLayout):
 		self.addRow(rating_line)
 			
 		#bookshelves
-		if len(library[index].bookshelves) > 1 or library[index].bookshelves[0]:
+		if len(library[index].bookshelves) > 0:
 			self.addRow(QLabel(f"<b>Bookshelves:</b> {'; '.join(library[index].bookshelves)}", wordWrap=True))
 				
 		#Review

@@ -1,28 +1,17 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import (
-	QButtonGroup,
-	QCheckBox,
-	QHBoxLayout,
-	QLabel,
-	QPushButton,
-	QRadioButton,
-	QVBoxLayout,
-	QWidget,
-	)
+from PyQt5.QtWidgets import QButtonGroup, QCheckBox, QHBoxLayout, QLabel, QPushButton, QRadioButton, QVBoxLayout, QWidget
+	
+from main_ui.main_window_proxy import main_window
 
 
 class ImportAssistant(QWidget):
 	"""
 	Assistant for importing libraries.
-	
-	args:
-	main_window: reference to parent widget in order to use its methods.
 	"""
 	
-	def __init__(self, main_window):
+	def __init__(self):
 		super().__init__()
-		self.main_window = main_window
 		self.setWindowIcon(QIcon('icons/import.png'))
 		self.setWindowTitle("Import Library")
 		self.setWindowModality(Qt.ApplicationModal)
@@ -156,7 +145,7 @@ class ImportAssistant(QWidget):
 		Starts importing proccess and closes this window.
 		"""
 		
-		self.main_window.import_from_gr(self.gr_naming_selection, self.gr_additional_authors_selection)
+		main_window.import_from_gr(self.gr_naming_selection, self.gr_additional_authors_selection)
 		self.close()
 
 	
@@ -203,5 +192,5 @@ class ImportAssistant(QWidget):
 		Starts importing proccess and closes this window.
 		"""
 		
-		self.main_window.merge_libraries()
+		main_window.merge_libraries()
 		self.close()

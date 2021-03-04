@@ -9,7 +9,6 @@ from PyQt5.QtWidgets import (
 	)
 
 from library.book_library import library, search_list
-from mw_tabs.main_window_tab import GenericMainWindowTab
 from other_ui.cb_constructors import FieldDropDown
 from panel.refresh import refresh_panel
 from panel.empty_panel import EmptyPanel
@@ -17,7 +16,7 @@ from tables.book_table import BookTable
 
 
 
-class SearchTab(GenericMainWindowTab):
+class SearchTab(QWidget):
 	"""
 	Layout for Search Tab in main window.
 	
@@ -29,9 +28,7 @@ class SearchTab(GenericMainWindowTab):
 	Top line contains search fields, bottom contains search results
 	<self.search_table>.
 	
-	args:
-	main_window: parent reference for using its methods.
-	
+	args:	
 	attributes:
 	self.current_search_input: value in search field last time Search 
 	button was pressed.
@@ -45,8 +42,9 @@ class SearchTab(GenericMainWindowTab):
 	self.selected_book: last book clicked, for displaying in Info Panel.
 	"""
 	
-	def __init__(self, main_window):
-		super().__init__(main_window)
+	def __init__(self):
+		super().__init__()
+		self.is_outdated = True
 		self.current_search_input = ""
 		self.current_search_field = ""
 		self.current_search_case_sensitive = False

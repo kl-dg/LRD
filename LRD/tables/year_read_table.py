@@ -8,7 +8,7 @@ class YearReadTable(GenericTable):
 	page count, average pages.
 	
 	args:
-	get_books: function tha tgets a list of books read in the selected 
+	get_books: function that gets a list of books read in the selected 
 	year.
 	
 	get_year_read: function that gets a list of items which will be 

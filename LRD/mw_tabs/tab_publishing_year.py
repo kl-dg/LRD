@@ -1,19 +1,8 @@
-from PyQt5.QtWidgets import (
-	QButtonGroup,
-	QHBoxLayout,
-	QLabel,
-	QRadioButton, 
-	QVBoxLayout, 
-	)
+from PyQt5.QtWidgets import QButtonGroup, QHBoxLayout, QLabel, QRadioButton, QVBoxLayout, QWidget
 
 from functions.date_formatting import get_now_year
 from functions.value_calculations import average
-from library.book_library import (
-	library, 
-	books_by_year_list, 
-	year_list,
-	)
-from mw_tabs.main_window_tab import GenericMainWindowTab
+from library.book_library import library, books_by_year_list, year_list
 from panel.refresh import refresh_panel
 from panel.empty_panel import EmptyPanel
 from tables.book_table import BookTable
@@ -21,7 +10,7 @@ from tables.pubyear_table import PubYearTable
 
 
 
-class PublishingYearTab(GenericMainWindowTab):
+class PublishingYearTab(QWidget):
 	"""
 	Layout for Publication Year tab on main window.
 	
@@ -36,9 +25,7 @@ class PublishingYearTab(GenericMainWindowTab):
 	self.year_table_layout: divides top left horizontally, left side for
 	time period table, right side for options and widgets.
 	
-	args:
-	main_window: parent referent for using its methods.
-	
+	args:	
 	attributes:
 	self.selected_release_type: either copy's edition or original
 	publication year(first edition), according to user selection.
@@ -56,8 +43,9 @@ class PublishingYearTab(GenericMainWindowTab):
 	will be shown in Info Panel.
 	"""
 	
-	def __init__(self, main_window):
-		super().__init__(main_window)
+	def __init__(self):
+		super().__init__()
+		self.is_outdated = True
 		self.selected_release_type = 'original_publication_year'
 		self.current_time_unit = 'decade'
 		self.selected_year = None

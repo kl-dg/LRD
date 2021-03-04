@@ -1,15 +1,15 @@
-from PyQt5.QtWidgets import QHBoxLayout, QPushButton, QVBoxLayout
+from PyQt5.QtWidgets import QHBoxLayout, QPushButton, QVBoxLayout, QWidget
 
 from library.book_library import books_by_publisher
 from library.queries import get_books_by_publisher
-from mw_tabs.main_window_tab import GenericMainWindowTab
+from main_ui.main_window_proxy import main_window
 from panel.refresh import refresh_panel
 from panel.empty_panel import EmptyPanel
 from tables.book_table import BookTable
 from tables.publisher_table import PublisherTable
 
 
-class PublisherTab(GenericMainWindowTab):
+class PublisherTab(QWidget):
 	"""
 	Layout for Publisher Tab in main window.
 	
@@ -24,9 +24,6 @@ class PublisherTab(GenericMainWindowTab):
 	self.publisher_table_area: divides the screen horizontally, left 
 	side for publishers table, right side for widgets.
 	
-	args:
-	main_window: parent reference for using its methods.
-	
 	attributes:
 	self.selected_publisher: last publisher clicked by user, which books
 	will be shown in books by publisher table.
@@ -35,9 +32,9 @@ class PublisherTab(GenericMainWindowTab):
 	its full information will shown in Info Panel.
 	"""
 	
-	def __init__(self, main_window):
-		super().__init__(main_window)
-		
+	def __init__(self):
+		super().__init__()
+		self.is_outdated = True
 		self.selected_book = None
 
 		self.publisher_table = PublisherTable(self)
@@ -99,7 +96,7 @@ class PublisherTab(GenericMainWindowTab):
 		"""
 		
 		if self.publisher_table.get_selected_publisher():
-			self.main_window.edit_attribute(self.publisher_table.get_selected_publisher(), 'publisher')
+			main_window.edit_attribute(self.publisher_table.get_selected_publisher(), 'publisher')
 			
 			
 	def clicked_get_books_without_publisher(self):

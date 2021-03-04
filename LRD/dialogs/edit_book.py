@@ -14,15 +14,13 @@ from PyQt5.QtWidgets import (
 	QWidget, 
 	)
 	
-from functions.date_formatting import (
-	get_now_time, 
-	ddmmyyyy_to_datetime, 
-	)
+from functions.date_formatting import get_now_time, ddmmyyyy_to_datetime
 from functions.isbn import isbn_10_validator, isbn_13_validator
 from functions.string_formatting import to_rating_cb					 				 
 from library.strings import available_formats, reading_statuses
 from library.book_library import library, Book
 from library.library_indexer import get_index
+from main_ui.main_window_proxy import main_window
 from other_ui.cb_constructors import (
 	DayDropDown, 
 	FormatDropDown, 
@@ -31,9 +29,6 @@ from other_ui.cb_constructors import (
 	ReadingStatusDropDown, 
 	YearDropDown, 
 	)
-
-
-
 
 class EditBook(QWidget):
 	"""
@@ -51,12 +46,10 @@ class EditBook(QWidget):
 	will be added.
 	"""
 	
-	def __init__(self, parent, index=None):
+	def __init__(self, index=None):
 		super().__init__()
-		
 		self.resize(650, 500)
 		self.index = index
-		self.parent = parent
 		self.setWindowModality(Qt.ApplicationModal)
 		
 		self.info_tab = QWidget()
@@ -613,8 +606,8 @@ class EditBook(QWidget):
 				self.notes_box.toPlainText(),
 				)
 								 
-		self.parent.flag_unsaved_changes = True
-		self.parent.set_interface_outdated()
-		self.parent.refresh_current_tab()
+		main_window.flag_unsaved_changes = True
+		main_window.set_interface_outdated()
+		main_window.refresh_current_tab()
 		self.close()
 

@@ -1,20 +1,16 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout
+from PyQt5.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 	
 from functions.value_calculations import average
-from library.book_library import (
-	author_list,
-	library, 
-	books_by_author_list,
-	)
-from mw_tabs.main_window_tab import GenericMainWindowTab
+from library.book_library import author_list, library, books_by_author_list
+from main_ui.main_window_proxy import main_window
 from panel.refresh import refresh_panel
 from panel.empty_panel import EmptyPanel
 from tables.author_table import AuthorTable
 from tables.book_table import BookTable
 
 
-class AuthorTab(GenericMainWindowTab):
+class AuthorTab(QWidget):
 	"""
 	Layout for Author Tab in main window.
 
@@ -27,10 +23,7 @@ class AuthorTab(GenericMainWindowTab):
 	
 	self.author_table_area: divides the top left horizontally, the left
 	side for author table, right side for widgets.
-	
-	args:
-	main_window: parent reference for using its methods.
-	
+
 	attributes:
 	self.selected_author: last clicked author, whose books will be
 	shown in books by author table.
@@ -40,8 +33,9 @@ class AuthorTab(GenericMainWindowTab):
 	self.selected_book: last book clicked, for displaying in Info Panel.
 	"""
 	
-	def __init__(self, main_window):
-		super().__init__(main_window)
+	def __init__(self):
+		super().__init__()
+		self.is_outdated = True
 		self.selected_author = None
 		self.run_for_the_first_time = True
 		self.selected_book = None
@@ -115,7 +109,7 @@ class AuthorTab(GenericMainWindowTab):
 		
 		index = [index.row() for index in self.author_table.selectionModel().selectedRows()]
 		if index:
-			self.main_window.edit_attribute(author_list[index[0]]['author'], 'author')
+			main_window.edit_attribute(author_list[index[0]]['author'], 'author')
 			
 			
 	def get_list_by_attribute(self):

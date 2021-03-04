@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QTableWidgetItem
 
 from library.book_library import publisher_list
+from library.queries import get_list_by_attribute
 from tables.generic_table import GenericTable
 
 
@@ -61,7 +62,7 @@ class PublisherTable(GenericTable):
 		"""
 		
 		if not sorting:
-			self.parent_tab.get_list_by_attribute(publisher_list, 'publisher')
+			get_list_by_attribute(publisher_list, 'publisher')
 		self.sort_table(self.current_sorting)
 		self.setRowCount(0)
 		for entry in publisher_list:

@@ -1,15 +1,14 @@
-from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout
+from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
 from library.book_library import books_by_bookshelf_list
 from library.queries import get_books_by_bookshelf
-from mw_tabs.main_window_tab import GenericMainWindowTab
 from panel.refresh import refresh_panel
 from panel.empty_panel import EmptyPanel
 from tables.bookshelves_table import BookshelvesTable
 from tables.book_table import BookTable
 
 
-class BookshelvesTab(GenericMainWindowTab):
+class BookshelvesTab(QWidget):
 	"""
 	Layout for Bookshelves tab in main window.
 	
@@ -20,16 +19,14 @@ class BookshelvesTab(GenericMainWindowTab):
 	self.tables_area_layout: divides the screen vertically, bookshelves
 	stats table and widgets on top, books by bookshelf on bottom.
 	
-	args:
-	main_window: parent reference for using its methods.
-	
 	attributes:
 	self.selected_book: last book selected by user, which information
 	will be displayed in Info Panel.
 	"""
 	
-	def __init__(self, main_window):
-		super().__init__(main_window)
+	def __init__(self):
+		super().__init__()
+		self.is_outdated = True
 		self.selected_book = None
 		
 		self.bookshelves_table = BookshelvesTable(self)

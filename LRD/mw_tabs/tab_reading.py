@@ -1,13 +1,5 @@
 from PyQt5.QtCore import Qt
-
-from PyQt5.QtWidgets import (
-	QHBoxLayout, 
-	QLabel,
-	QPushButton,
-	QTabWidget,
-	QVBoxLayout,
-	QWidget,
-	)
+from PyQt5.QtWidgets import QHBoxLayout, QLabel, QPushButton, QTabWidget, QVBoxLayout, QWidget
 	
 from functions.value_calculations import average
 from graphs.graphs_library import GraphsWindowLibraryStats
@@ -23,24 +15,19 @@ from library.book_library import (
 	to_read_list, 
 	year_read_list, 
 	)
-from mw_tabs.main_window_tab import GenericMainWindowTab
 from panel.refresh import refresh_panel
 from panel.empty_panel import EmptyPanel
 from tables.book_table import BookTable
 from tables.year_read_table import YearReadTable
 
 
-
-class ReadingTab(GenericMainWindowTab):
+class ReadingTab(QWidget):
 	"""
 	Layout for Reading Status tab in main window.
 	
 	Tab layout:
 	self.layout: splits screen in half. Left side for tabs with tables
 	by reading status, right side for book information panel.
-	
-	args:
-	main_window: parent reference for using its methods.
 	
 	attributes:
 	self.selected_year: selected year in reading stats by year table.
@@ -50,8 +37,9 @@ class ReadingTab(GenericMainWindowTab):
 	information in Info Panel.
 	"""
 	
-	def __init__(self, main_window):
-		super().__init__(main_window)
+	def __init__(self):
+		super().__init__()
+		self.is_outdated = True
 		self.selected_year = None
 		self.selected_book = None
 		self.stats_dict = dict()

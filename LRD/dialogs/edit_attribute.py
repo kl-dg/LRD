@@ -1,13 +1,8 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (
-	QDialog, 
-	QHBoxLayout,
-	QLineEdit, 
-	QPushButton, 
-	QVBoxLayout,
-	)
+from PyQt5.QtWidgets import QDialog, QHBoxLayout, QLineEdit, QPushButton, QVBoxLayout
 
 from library.book_library import library
+from main_ui.main_window_proxy import main_window
 
 
 class EditValueByAttribute(QDialog):
@@ -22,11 +17,10 @@ class EditValueByAttribute(QDialog):
 	attribute: what book attribute e.g. "author", "publisher", "series".
 	"""
 	
-	def __init__(self, value, attribute, main_window):
+	def __init__(self, value, attribute):
 		super().__init__()
 		self.value = value
 		self.attribute = attribute
-		self.main_window = main_window
 		
 		self.resize(200, 80)
 		self.setWindowFlags(Qt.WindowCloseButtonHint)
@@ -76,7 +70,7 @@ class EditValueByAttribute(QDialog):
 					if getattr(book, self.attribute) == self.value:
 						setattr(book, self.attribute, self.text_field.text().strip())
 		
-			self.main_window.flag_unsaved_changes = True
-			self.main_window.set_interface_outdated()
+			main_window.flag_unsaved_changes = True
+			main_window.set_interface_outdated()
 			
 		self.close()

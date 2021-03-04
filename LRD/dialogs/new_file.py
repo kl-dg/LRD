@@ -1,13 +1,8 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import (
-	QDialog,
-	QHBoxLayout, 
-	QLabel,
-	QPushButton, 
-	QVBoxLayout,
-	)
+from PyQt5.QtWidgets import QDialog, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
 
+from main_ui.main_window_proxy import main_window
 
 class ConfirmNewLibrary(QDialog):
 	"""
@@ -25,14 +20,12 @@ class ConfirmNewLibrary(QDialog):
 	Cancel: closes this dialog without doing anything.
 	
 	args:
-	main_window: parent reference to allow the use of its methods.
 	behavior: either "new" or "open". Message and actions will be 
 	adjusted accordingly.
 	"""
 	
-	def __init__(self, main_window, behavior):
+	def __init__(self, behavior):
 		super().__init__()
-		self.main_window = main_window
 		self.behavior = behavior
 		
 		self.resize(300, 100)
@@ -74,9 +67,9 @@ class ConfirmNewLibrary(QDialog):
 		
 		self.main_window.save_as()
 		if self.behavior == 'new':
-			self.main_window.new_file()
+			main_window.new_file()
 		elif self.behavior == 'open':
-			self.main_window.check_before_open_file()
+			main_window.check_before_open_file()
 		self.close()
 		
 		
@@ -87,8 +80,8 @@ class ConfirmNewLibrary(QDialog):
 		"""
 		
 		if self.behavior == 'new':
-			self.main_window.flag_unsaved_changes = False
-			self.main_window.new_file()
+			main_window.flag_unsaved_changes = False
+			main_window.new_file()
 		elif self.behavior == 'open':
-			self.main_window.open_file()
+			main_window.open_file()
 		self.close()

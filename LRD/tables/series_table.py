@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QTableWidgetItem
 
+from library.queries import get_list_by_attribute
 from tables.generic_table import GenericTable
 
 
@@ -56,7 +57,7 @@ class SeriesTable(GenericTable):
 		"""
 		
 		if not sorting:
-			self.parent.get_list_by_attribute(self.source_list, self.content)
+			get_list_by_attribute(self.source_list, self.content)
 		self.sort_table(self.current_sorting)
 		self.setRowCount(0)
 		for entry in self.source_list:
