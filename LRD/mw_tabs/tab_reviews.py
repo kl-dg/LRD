@@ -11,7 +11,8 @@ from PyQt5.QtWidgets import (
 	)
 
 from functions.string_formatting import get_int
-from library.book_library import text_box_list, library
+from library.book_library import reviews_list, quotes_list, notes_list, library
+from library.queries import get_books_with_text
 from mw_tabs.main_window_tab import GenericMainWindowTab
 from other_ui.cb_constructors import SortReviewsDropDown
 
@@ -41,6 +42,11 @@ class TextPageTab(GenericMainWindowTab):
 	def __init__(self, main_window, attribute):
 		super().__init__(main_window)
 		self.attribute = attribute
+		
+		#This constructor can handle review, quotes and notes tabs. There's a specific list for each of these
+		#attributes, the following two lines will correlate self.text_box_list to the proper list.
+		self.attribute_lists = {"review": reviews_list, "quotes": quotes_list, "notes": notes_list}
+		self.text_box_list = self.attribute_lists[self.attribute]
 		
 		self.sort_cb = SortReviewsDropDown()
 		self.sort_cb.currentTextChanged.connect(lambda: self.refresh_interface(sorting=True))
@@ -87,17 +93,6 @@ class TextPageTab(GenericMainWindowTab):
 		self.v_scroll.setWidget(self.scrollable_content)
 		
 		self.text_boxes_area_layout.addWidget(self.v_scroll)
-		
-	
-	def get_books_with_text(self):
-		"""
-		Gets a list of books that have reviews, quotes or notes.
-		"""
-		
-		text_box_list.clear()
-		for index in library:
-			if getattr(library[index], self.attribute):
-				text_box_list.append(index)
 
 	
 	def refresh_interface(self, sorting=False):
@@ -113,9 +108,9 @@ class TextPageTab(GenericMainWindowTab):
 			
 			self.text_boxes_area_settings()
 			if not sorting:
-				self.get_books_with_text()
+				get_books_with_text(self.attribute, self.attribute_lists[self.attribute])
 			self.sort_tab()
-			for index in text_box_list:	
+			for index in self.text_box_list:
 				book_widget = BookWidget(self, index, self.attribute)
 				self.scrollable_content_layout.addWidget(book_widget)
 			self.is_outdated = False
@@ -141,17 +136,17 @@ class TextPageTab(GenericMainWindowTab):
 		"""
 		
 		if self.sort_cb.currentIndex() == 0: 
-			text_box_list.sort(key = lambda x: library[x].title.lower())
+			self.text_box_list.sort(key = lambda x: library[x].title.lower())
 		elif self.sort_cb.currentIndex() == 1:
-			text_box_list.sort(key = lambda x: library[x].author_sorted().lower())
+			self.text_box_list.sort(key = lambda x: library[x].author_sorted().lower())
 		elif self.sort_cb.currentIndex() == 2:
-			text_box_list.sort(key = lambda x: library[x].rating)
+			self.text_box_list.sort(key = lambda x: library[x].rating, reverse=True)
 		elif self.sort_cb.currentIndex() == 3:
-			text_box_list.sort(key = lambda x: library[x].date_sortable('date_read'), reverse=True)
+			self.text_box_list.sort(key = lambda x: library[x].date_sortable('date_read'), reverse=True)
 		elif self.sort_cb.currentIndex() == 4:
-			text_box_list.sort(key = lambda x: get_int(library[x].num_pages), reverse=True)
+			self.text_box_list.sort(key = lambda x: get_int(library[x].num_pages), reverse=True)
 		elif self.sort_cb.currentIndex() == 5:
-			text_box_list.sort(key = lambda x: get_int(library[x].original_publication_year), reverse=True)
+			self.text_box_list.sort(key = lambda x: get_int(library[x].original_publication_year), reverse=True)
 			
 	
 class BookWidget(QWidget):

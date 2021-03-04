@@ -25,7 +25,9 @@ books_read_by_year_list = []
 gave_up_list = []
 research_books_list = []
 not_read_list = []
-text_box_list = []
+reviews_list = []
+quotes_list = []
+notes_list = []
 
 class Book:
 	"""

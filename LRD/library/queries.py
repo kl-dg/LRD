@@ -1,5 +1,12 @@
 from functions.value_calculations import average
-from library.book_library import library, books_by_bookshelf_list, books_by_publisher, bookshelves_list
+from library.book_library import (library, 
+	books_by_bookshelf_list, 
+	books_by_publisher, 
+	bookshelves_list, 
+	reviews_list, 
+	quotes_list, 
+	notes_list
+	)
 
 
 def get_bookshelves_list():
@@ -63,3 +70,17 @@ def get_books_by_publisher(selected_publisher):
 	
 	books_by_publisher.clear()
 	[books_by_publisher.append(index) for index in library if library[index].publisher == selected_publisher]
+	
+	
+def get_books_with_text(book_attribute, output_list):
+	"""
+	Parameters:
+	book_attribute: should be either "review", "quotes" or "notes".
+	
+	output_list: reference to review_list, quotes_list or notes_list.
+	"""
+	
+	output_list.clear()
+	for index in library:
+		if getattr(library[index], book_attribute):
+			output_list.append(index)
