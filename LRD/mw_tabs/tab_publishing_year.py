@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QButtonGroup, QHBoxLayout, QLabel, QRadioButton, QVB
 from functions.date_formatting import get_now_year
 from functions.value_calculations import average
 from library.book_library import library, books_by_year_list, year_list
+from library.queries import get_list_by_attribute
 from panel.refresh import refresh_panel
 from panel.empty_panel import EmptyPanel
 from tables.book_table import BookTable
@@ -25,7 +26,6 @@ class PublishingYearTab(QWidget):
 	self.year_table_layout: divides top left horizontally, left side for
 	time period table, right side for options and widgets.
 	
-	args:	
 	attributes:
 	self.selected_release_type: either copy's edition or original
 	publication year(first edition), according to user selection.
@@ -134,7 +134,7 @@ class PublishingYearTab(QWidget):
 		"""
 		
 		if self.current_time_unit == 'year':
-			self.get_list_by_attribute(year_list, self.selected_release_type)
+			get_list_by_attribute(year_list, self.selected_release_type)
 		elif self.current_time_unit == 'decade':
 			self.pubyear_table_to_decade()
 		elif self.current_time_unit == 'century':
