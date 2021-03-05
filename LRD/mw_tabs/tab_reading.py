@@ -1,8 +1,6 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QPushButton, QTabWidget, QVBoxLayout, QWidget
 	
-from graphs.graphs_library import GraphsWindowLibraryStats
-from graphs.graphs_reading import GraphsWindowReadingTab
 from library.book_library import (
 	library, 
 	books_read_by_year_list, 
@@ -15,6 +13,7 @@ from library.book_library import (
 	year_read_list, 
 	)
 from library.queries import get_read_books_by_year, get_read_books_general_statistics, get_reading_status_lists
+from main_ui.main_window_proxy import main_window
 from panel.refresh import refresh_panel
 from panel.empty_panel import EmptyPanel
 from tables.book_table import BookTable
@@ -140,10 +139,10 @@ class ReadingTab(QWidget):
 		self.books_by_year_read_table = BookTable(self, books_read_by_year_list)
 		
 		button_reading_graphs = QPushButton("Reading progress in graphs")
-		button_reading_graphs.clicked.connect(self.open_graphs_window_reading)
+		button_reading_graphs.clicked.connect(main_window.open_graphs_window_reading)
 		
 		button_library_graphs = QPushButton("Your library in graphs")
-		button_library_graphs.clicked.connect(self.open_graphs_window_library)
+		button_library_graphs.clicked.connect(main_window.open_graphs_window_library)
 		
 		self.stats_and_info_layout = QVBoxLayout()
 		
@@ -209,24 +208,6 @@ class ReadingTab(QWidget):
 			get_read_books_by_year(self.year_read_table.selected_year)
 			self.books_by_year_read_table.refresh_table()
 		
-		
-	def open_graphs_window_reading(self):
-		"""
-		Open window for reading progress graphs.
-		"""
-		
-		self.graphs_window = GraphsWindowReadingTab()
-		self.graphs_window.show()
-		
-	
-	def open_graphs_window_library(self):
-		"""
-		Open window for library statistics graphs.
-		"""
-		
-		self.graphs_window = GraphsWindowLibraryStats()
-		self.graphs_window.show()
-	
 		
 	#"To read" tab
 	def wishlist_tab_settings(self):

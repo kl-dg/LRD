@@ -12,7 +12,9 @@ from dialogs.close_program import AskSaveBeforeQuit
 from dialogs.edit_attribute import EditValueByAttribute
 from dialogs.edit_book import EditBook
 from dialogs.delete_book import DeleteBook
-from dialogs.import_assistant import ImportAssistant 
+from dialogs.graphs_library import LibraryStatsGraphsWindow
+from dialogs.graphs_reading import ReadingProgressGraphsWindow
+from dialogs.import_assistant import ImportAssistant
 from dialogs.new_file import ConfirmNewLibrary
 from dialogs.quick_text_editor import EditText
 from library.edit_library import delete_book, reset_library
@@ -352,7 +354,25 @@ class MainWindow(QMainWindow):
 				self.set_interface_outdated()
 				self.refresh_current_tab()
 				
-				
+	
+	def open_graphs_window_reading(self):
+		"""
+		Open window for reading progress graphs.
+		"""
+		
+		self.graphs_window = ReadingProgressGraphsWindow()
+		self.graphs_window.show()
+		
+	
+	def open_graphs_window_library(self):
+		"""
+		Open window for library statistics graphs.
+		"""
+		
+		self.graphs_window = LibraryStatsGraphsWindow()
+		self.graphs_window.show()
+		
+		
 	def set_interface_outdated(self):
 		"""
 		Whenever a change is made, set all tabs to outdated.
