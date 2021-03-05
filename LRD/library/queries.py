@@ -2,10 +2,18 @@ from functions.value_calculations import average
 from library.book_library import (library, 
 	books_by_bookshelf_list, 
 	books_by_publisher, 
+	books_read_by_year_list,
 	bookshelves_list, 
-	reviews_list, 
+	current_reading_list,
+	gave_up_list,
+	not_read_list,
+	notes_list,
 	quotes_list, 
-	notes_list
+	reviews_list, 
+	research_books_list,
+	to_read_list,
+	wishlist,
+	year_read_list,
 	)
 
 
@@ -128,3 +136,122 @@ def get_list_by_attribute(working_list, attribute, get_avg_length = False):
 				book_count = value[0],
 				average_rating = f"{average(value[2], value[1]):.2f}",
 				))
+				
+def get_read_books_by_year(year):
+	"""
+	Refreshes list of books by year read.
+	
+	Parameter:
+	year: either the year selected by the user or "No Read Date".
+	"""
+	
+	books_read_by_year_list.clear()
+	
+	if year != "No Read Date":
+		[books_read_by_year_list.append(index) for index in library if library[index].date_read and library[index].date_read.year == int(year)]
+	else:
+		[books_read_by_year_list.append(index) for index in library if not library[index].date_read]
+
+
+def get_reading_status_lists():
+	"""
+	Refreshes lists by reading statuses.
+	"""
+	
+	#Reset lists
+	year_read_list.clear()
+	current_reading_list.clear()
+	to_read_list.clear()
+	wishlist.clear()
+	gave_up_list.clear()
+	research_books_list.clear()
+	not_read_list.clear()
+	
+	#Create temporary dict for yearly reading progress stats
+	year_read_dict = dict()
+	
+	#Loop through the library and add indexes to list according to their reading status, except for books
+	#marked as "Read", which information will be collected for reading progress table. 
+	for index, book in library.items():
+		if book.reading_status == "Read":
+			if book.date_read:
+				if str(book.date_read.year) not in year_read_dict:
+					year_read_dict[str(book.date_read.year)] = [0] * 5
+				
+				year_read_dict[str(book.date_read.year)][0] += 1
+				if book.rating:
+					year_read_dict[str(book.date_read.year)][1] += 1
+					year_read_dict[str(book.date_read.year)][2] += int(book.rating)
+				if book.num_pages:
+					year_read_dict[str(book.date_read.year)][3] += 1
+					year_read_dict[str(book.date_read.year)][4] += int(book.num_pages)
+					
+			else:
+				if "No Read Date" not in year_read_dict:
+					year_read_dict["No Read Date"] = [0] * 5
+					
+				year_read_dict["No Read Date"][0] += 1
+				if book.rating:
+					year_read_dict["No Read Date"][1] += 1
+					year_read_dict["No Read Date"][2] += int(book.rating)
+				if book.num_pages:
+					year_read_dict["No Read Date"][3] += 1
+					year_read_dict["No Read Date"][4] += int(book.num_pages)
+					
+		elif book.reading_status == 'Currently reading':
+			current_reading_list.append(index)
+		elif book.reading_status == 'To read':
+			to_read_list.append(index)
+		elif book.reading_status == 'Wishlist':
+			wishlist.append(index)
+		elif book.reading_status == 'Gave up':
+			gave_up_list.append(index)
+		elif book.reading_status == 'For research':
+			research_books_list.append(index)
+		elif book.reading_status == 'Not read':
+			not_read_list.append(index)
+	
+	#Transfer information from temporary dict to year_read_list, calculate averages on the fly
+	for key, value in year_read_dict.items():
+		year_read_list.append(dict(
+			year = key, 
+			book_count = value[0], 
+			average_rating = f"{average(value[2], value[1]):.2f}",
+			total_pages = str(value[4]), 
+			average_length = f"{average(value[4], value[3]):.2f}",
+			))
+
+
+def get_read_books_general_statistics():
+	"""
+	Gets statistics for books read tab.
+	
+	Currently supported: 
+	1 - Total books read;
+	2 - Total pages read;
+	3 - Average length (in pages);
+	4 - Average rating (in stars).
+	
+	Return: a tuple with the information listed above.
+	"""
+	
+	book_count = 0
+	rating_count = 0
+	rating_sum = 0
+	length_count = 0
+	length_sum = 0
+	
+	for book in library.values():
+		if book.reading_status == 'Read':
+			
+			book_count += 1
+			
+			if book.rating:
+				rating_count += 1
+				rating_sum += int(book.rating)
+				
+			if book.num_pages:
+				length_count+= 1
+				length_sum += int(book.num_pages)
+
+	return (book_count, length_sum, average(length_sum, length_count), average(rating_sum, rating_count))

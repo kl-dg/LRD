@@ -1,7 +1,6 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QPushButton, QTabWidget, QVBoxLayout, QWidget
 	
-from functions.value_calculations import average
 from graphs.graphs_library import GraphsWindowLibraryStats
 from graphs.graphs_reading import GraphsWindowReadingTab
 from library.book_library import (
@@ -15,6 +14,7 @@ from library.book_library import (
 	to_read_list, 
 	year_read_list, 
 	)
+from library.queries import get_read_books_by_year, get_read_books_general_statistics, get_reading_status_lists
 from panel.refresh import refresh_panel
 from panel.empty_panel import EmptyPanel
 from tables.book_table import BookTable
@@ -40,9 +40,7 @@ class ReadingTab(QWidget):
 	def __init__(self):
 		super().__init__()
 		self.is_outdated = True
-		self.selected_year = None
 		self.selected_book = None
-		self.stats_dict = dict()
 		self.run_for_the_first_time = True
 		
 		self.current_to_read_tab_settings()
@@ -71,8 +69,7 @@ class ReadingTab(QWidget):
 		
 		if self.is_outdated:
 			self.refresh_reading_status_lists()
-			self.year_read_table.refresh_table()
-			self.get_read_books_by_year()
+			self.refresh_books_by_year_read_table()
 			self.refresh_info_and_stats()
 			refresh_panel(self)
 			self.is_outdated = False
@@ -84,7 +81,7 @@ class ReadingTab(QWidget):
 		history table) and selected book.
 		"""
 		
-		self.selected_year = None
+		self.year_read_table.selected_year = None
 		self.selected_book = None
 		
 		
@@ -95,42 +92,10 @@ class ReadingTab(QWidget):
 		is filtered by year.
 		"""
 		
-		current_reading_list.clear()
-		to_read_list.clear()
-		wishlist.clear()
-		gave_up_list.clear()
-		research_books_list.clear()
-		not_read_list.clear()
+		get_reading_status_lists()
 		
-		self.stats_dict['count'] = 0
-		self.stats_dict['rating_count'] = 0
-		self.stats_dict['rating_sum'] = 0
-		self.stats_dict['length_count'] = 0
-		self.stats_dict['length_sum'] = 0
-		
-		for index, book in library.items():
-			if book.reading_status == 'Read':
-				self.stats_dict['count'] += 1
-				if book.rating:
-					self.stats_dict['rating_count'] += 1
-					self.stats_dict['rating_sum'] += int(book.rating)
-				if book.num_pages:
-					self.stats_dict['length_count'] += 1
-					self.stats_dict['length_sum'] += int(book.num_pages)
-			elif book.reading_status == 'Currently reading':
-				current_reading_list.append(index)
-			elif book.reading_status == 'To read':
-				to_read_list.append(index)
-			elif book.reading_status == 'Wishlist':
-				wishlist.append(index)
-			elif book.reading_status == 'Gave up':
-				gave_up_list.append(index)
-			elif book.reading_status == 'For research':
-				research_books_list.append(index)
-			elif book.reading_status == 'Not read':
-				not_read_list.append(index)
-		
-		self.currently_reading_table.refresh_table()		
+		self.currently_reading_table.refresh_table()
+		self.year_read_table.refresh_table()	
 		self.to_read_table.refresh_table()
 		self.wishlist_table.refresh_table()				
 		self.abandoned_books_table.refresh_table()
@@ -171,7 +136,7 @@ class ReadingTab(QWidget):
 		year table.
 		"""
 		
-		self.year_read_table = YearReadTable(self, year_read_list)
+		self.year_read_table = YearReadTable(self)
 		self.books_by_year_read_table = BookTable(self, books_read_by_year_list)
 		
 		button_reading_graphs = QPushButton("Reading progress in graphs")
@@ -197,84 +162,7 @@ class ReadingTab(QWidget):
 		
 		self.tab_read = QWidget()
 		self.tab_read.setLayout(read_tab_layout)
-			
-		
-	def get_list_by_attribute(self):
-		"""
-		Gets a list of all years with read books with average rating,
-		average book length and total pages.
-		"""
-		
-		year_read_list.clear()
-		year_set = set()
-		for book in library.values():
-			if book.date_read:
-				year_set.add(str(book.date_read.year))
-		
-		year_dict = dict()
-		for year in year_set:
-			year_dict[year] = [0, 0, 0, 0, 0]
-		year_dict["No Read Date"] = [0, 0, 0, 0, 0]
-		
-		for book in library.values():
-			if book.reading_status == 'Read':
-				try:
-					year_dict[str(book.date_read.year)][0] += 1
-					if book.rating:
-						year_dict[str(book.date_read.year)][1] += 1
-						year_dict[str(book.date_read.year)][2] += int(book.rating)
-					if book.num_pages:
-						year_dict[str(book.date_read.year)][3] += 1
-						year_dict[str(book.date_read.year)][4] += int(book.num_pages)
-				except AttributeError:
-					year_dict["No Read Date"][0] += 1
-					if book.rating:
-						year_dict["No Read Date"][1] += 1
-						year_dict["No Read Date"][2] += int(book.rating)
-					if book.num_pages:
-						year_dict["No Read Date"][3] += 1
-						year_dict["No Read Date"][4] += int(book.num_pages)
-			
-		for key, value in year_dict.items():
-			year_read_list.append(dict(
-				year = key, 
-				book_count = value[0], 
-				average_rating = f"{average(value[2], value[1]):.2f}",
-				total_pages = str(value[4]), 
-				average_length = f"{average(value[4], value[3]):.2f}",
-				))
-		
-		
-	def get_year(self):
-		"""
-		Gets clicked year in reading history table. Refreshes books
-		read by selected year list.
-		"""
-		
-		index = [index.row() for index in self.year_read_table.selectionModel().selectedRows()]
-		if index:
-			self.selected_year = year_read_list[index[0]]['year']
-			self.get_read_books_by_year()
-			
-	
-	def get_read_books_by_year(self):
-		"""
-		Gets a list of books read in selected year, then call
-		<refresh_table> on books read by year table.
-		"""
-		
-		books_read_by_year_list.clear()
-		for index in library:
-			if library[index].reading_status == 'Read':
-				if library[index].date_read and str(library[index].date_read.year) == self.selected_year:
-					books_read_by_year_list.append(index)
-					
-				elif self.selected_year == "No Read Date":
-					if not library[index].date_read:
-						books_read_by_year_list.append(index)
-				
-		self.books_by_year_read_table.refresh_table()
-		
+
 		
 	def refresh_info_and_stats(self):
 		"""
@@ -305,10 +193,21 @@ class ReadingTab(QWidget):
 			self.stats_and_info_layout.addWidget(self.average_pages_label)
 			self.stats_and_info_layout.addWidget(self.average_rating_label)
 			
-		self.read_books_count_label.setText(f"Total books read: {self.stats_dict['count']}.")
-		self.pages_read_count_label.setText(f"Total pages read: {self.stats_dict['length_sum']}.")
-		self.average_pages_label.setText(f"Average book length: {average(self.stats_dict['length_sum'], self.stats_dict['length_count']):.1f} pages.")
-		self.average_rating_label.setText(f"Average rating: {average(self.stats_dict['rating_sum'], self.stats_dict['rating_count']):.2f} stars.")
+		book_count, page_count, avg_length, avg_rating = get_read_books_general_statistics()
+			
+		self.read_books_count_label.setText(f"Total books read: {book_count}.")
+		self.pages_read_count_label.setText(f"Total pages read: {page_count}.")
+		self.average_pages_label.setText(f"Average book length: {avg_length:.1f} pages.")
+		self.average_rating_label.setText(f"Average rating: {avg_rating:.2f} stars.")
+		
+	def refresh_books_by_year_read_table(self):
+		"""
+		Refresh books read by selected year list and table.
+		"""
+		
+		if self.year_read_table.selected_year is not None:
+			get_read_books_by_year(self.year_read_table.selected_year)
+			self.books_by_year_read_table.refresh_table()
 		
 		
 	def open_graphs_window_reading(self):
