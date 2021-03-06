@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QTableWidgetItem
 
 from library.book_library import year_list
+from library.queries import get_pubyear_list
 from tables.generic_table import GenericTable
 
 class PubYearTable(GenericTable):
@@ -14,12 +15,13 @@ class PubYearTable(GenericTable):
 	self.current_sorting: column selected for sorting table.
 	"""
 	
-	def __init__(self, parent):
+	def __init__(self, parent_tab):
 		super().__init__(column_count = 3)
-		self.parent = parent
+		self.parent_tab = parent_tab
 		self.current_sorting = '0r'
+		self.selected_year = None
 		
-		self.itemSelectionChanged.connect(self.parent.get_year)
+		self.itemSelectionChanged.connect(self.year_selection_changed)
 		self.setHorizontalHeaderLabels((
 			"Year",
 			"Books",
@@ -29,6 +31,27 @@ class PubYearTable(GenericTable):
 		self.setColumnWidth(1,50)
 		self.setColumnWidth(2,100)
 		
+	
+	def get_selected_year(self):
+		"""
+		Returns label of the selected year if there's a selected year.
+		"""
+		
+		index = [index.row() for index in self.selectionModel().selectedRows()]
+		if index:
+			return year_list[index[0]]['title']
+			
+			
+	def year_selection_changed(self):
+		"""
+		When user selects a different year, record its label on self.selected_year
+		and refresh books by year table in order to display all books published on the selected year.
+		"""
+		
+		if self.get_selected_year():
+			self.selected_year = self.get_selected_year()	
+			self.parent_tab.refresh_books_by_year_table()
+		
 		
 	def refresh_table(self, sorting=False):
 		"""
@@ -37,12 +60,14 @@ class PubYearTable(GenericTable):
 		"""
 		
 		if not sorting:
-			self.parent.get_pubyear_list()
+			get_pubyear_list(self.parent_tab.current_time_unit, self.parent_tab.selected_release_type)
 		self.sort_table(self.current_sorting)
 		self.setRowCount(0)
 		for entry in year_list:
-			year_label = lambda year: f"{year}s" if 'older' not in year and self.parent.current_time_unit == 'decade' \
-				else (f"{int(year)+1}-{int(year)+100}" if 'older' not in year and self.parent.current_time_unit == 'century' \
+			#year_label expression will add an "s" to decades. Example: "1920s". While centuries label will be turned
+			#into an interval string. Example: "1801-1900".
+			year_label = lambda year: f"{year}s" if 'older' not in year and self.parent_tab.current_time_unit == 'decade' \
+				else (f"{int(year)+1}-{int(year)+100}" if 'older' not in year and self.parent_tab.current_time_unit == 'century' \
 				else year)
 				
 			year = QTableWidgetItem(year_label(entry['title']))

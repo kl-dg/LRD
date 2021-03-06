@@ -1,7 +1,9 @@
+from functions.date_formatting import get_now_year
 from functions.value_calculations import average
 from library.book_library import (library, 
 	books_by_bookshelf_list, 
 	books_by_publisher, 
+	books_by_year_list,
 	books_read_by_year_list,
 	bookshelves_list, 
 	current_reading_list,
@@ -13,6 +15,7 @@ from library.book_library import (library,
 	research_books_list,
 	to_read_list,
 	wishlist,
+	year_list,
 	year_read_list,
 	)
 
@@ -76,6 +79,44 @@ def get_books_by_publisher(selected_publisher):
 	[books_by_publisher.append(index) for index in library if library[index].publisher == selected_publisher]
 	
 	
+def get_books_by_publishing_year(year, time_span, attribute):
+	"""
+	Refreshes books_by_year_list by getting all books published in the selected year / decade / century.
+	
+	Parameters:
+	year: publishing year selected by user.
+	
+	time_span: either "year", "decade" or "century".
+	
+	attribute: either "original_publication_year" or "edition_publication_year"
+	"""
+	
+	books_by_year_list.clear()
+	
+	if time_span == 'year':
+		for index in library:
+			if getattr(library[index], attribute) == year:
+				books_by_year_list.append(index)
+	
+	elif time_span == 'decade':
+		for index in library:
+			if getattr(library[index], attribute):
+				if 'older' in year:
+					if int(getattr(library[index], attribute)) < int(f'{int(get_now_year()[0:-1]) - 20}0'):
+						books_by_year_list.append(index)
+				elif int(getattr(library[index], attribute)) >= int(year) and int(getattr(library[index], attribute)) < int(year) + 10:
+					books_by_year_list.append(index)				
+		
+	elif time_span == 'century':
+		for index in library:
+			if getattr(library[index], attribute):
+				if 'older' in year:
+					if int(getattr(library[index], attribute)) <= int(f'{int(get_now_year()[0:-2]) - 10}00'):
+						books_by_year_list.append(index)
+				elif int(getattr(library[index], attribute)) > int(year) and int(getattr(library[index], attribute)) <= int(year) + 100:
+					books_by_year_list.append(index)
+	
+	
 def get_books_with_text(book_attribute, output_list):
 	"""
 	Parameters:
@@ -136,6 +177,90 @@ def get_list_by_attribute(working_list, attribute, get_avg_length = False):
 				book_count = value[0],
 				average_rating = f"{average(value[2], value[1]):.2f}",
 				))
+				
+
+def get_pubyear_list(time_span, attribute):
+	"""
+	Refreshes year_list with a list of years, decades or centuries and its stats(book count and average rating).
+	"""
+	
+	if time_span == 'year':
+		get_list_by_attribute(year_list, attribute)
+		
+	elif time_span == 'decade':
+		year_list.clear()
+		
+		year = get_now_year()
+		cur_decade = int(f"{str(year)[0:-1]}0")
+		decades_dict = dict()
+		
+		while cur_decade > int(year) - 209:
+			decades_dict[f"{cur_decade}"] = [0, 0, 0]
+			cur_decade -= 10
+			
+		decades_dict[f"{cur_decade + 9} or older"] = [0, 0, 0]
+		
+		for book in library.values():
+			if getattr(book, attribute):
+				try:
+					decades_dict[f"{getattr(book, attribute)[0:-1]}0"][0] += 1
+					if book.rating:
+						decades_dict[f"{getattr(book, attribute)[0:-1]}0"][1] += 1
+						decades_dict[f"{getattr(book, attribute)[0:-1]}0"][2] += int(book.rating)
+				except KeyError:
+					decades_dict[f"{cur_decade + 9} or older"][0] += 1
+					if book.rating:
+						decades_dict[f"{cur_decade + 9} or older"][1] += 1
+						decades_dict[f"{cur_decade + 9} or older"][2] += int(book.rating)
+						
+		for key, value in decades_dict.items():
+			if value[0] > 0:
+				year_list.append(dict(
+					title = key,
+					book_count = value[0],
+					average_rating = f"{average(value[2], value[1]):.2f}",
+					))
+		
+	elif time_span == 'century':
+		year_list.clear()
+		
+		year = get_now_year()
+		cur_century = int(f"{str(year)[0:-2]}00")
+		centuries_dict = dict()
+		
+		while cur_century > int(year) - 1099:
+			centuries_dict[f"{cur_century}"] = [0, 0, 0]
+			cur_century -= 100
+			
+		centuries_dict[f"{cur_century + 100} or older"] = [0, 0, 0]
+		
+		for book in library.values():
+			if getattr(book, attribute):
+				try:
+					if not int(getattr(book, attribute)) % 100 == 0:
+						centuries_dict[f"{getattr(book, attribute)[0:-2]}00"][0] += 1
+						if book.rating:
+							centuries_dict[f"{getattr(book, attribute)[0:-2]}00"][1] += 1
+							centuries_dict[f"{getattr(book, attribute)[0:-2]}00"][2] += int(book.rating)
+					elif int(getattr(book, attribute)) % 100 == 0:
+						centuries_dict[f"{int(f'{getattr(book, attribute)[0:-2]}00') - 100}"][0] += 1
+						if book.rating:
+							centuries_dict[f"{int(f'{getattr(book, attribute)[0:-2]}00') - 100}"][1] += 1
+							centuries_dict[f"{int(f'{getattr(book, attribute)[0:-2]}00') - 100}"][2] += int(book.rating)
+				except KeyError:
+					centuries_dict[f"{cur_century + 100} or older"][0] += 1
+					if book.rating:
+						centuries_dict[f"{cur_century + 100} or older"][1] += 1
+						centuries_dict[f"{cur_century + 100} or older"][2] += int(book.rating)
+						
+		for key, value in centuries_dict.items():
+			if value[0] > 0:
+				year_list.append(dict(
+					title = key,
+					book_count = value[0],
+					average_rating = f"{average(value[2], value[1]):.2f}",
+					))
+					
 				
 def get_read_books_by_year(year):
 	"""

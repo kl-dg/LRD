@@ -1,9 +1,7 @@
 from PyQt5.QtWidgets import QButtonGroup, QHBoxLayout, QLabel, QRadioButton, QVBoxLayout, QWidget
 
-from functions.date_formatting import get_now_year
-from functions.value_calculations import average
-from library.book_library import library, books_by_year_list, year_list
-from library.queries import get_list_by_attribute
+from library.book_library import books_by_year_list
+from library.queries import get_books_by_publishing_year
 from panel.refresh import refresh_panel
 from panel.empty_panel import EmptyPanel
 from tables.book_table import BookTable
@@ -48,7 +46,6 @@ class PublishingYearTab(QWidget):
 		self.is_outdated = True
 		self.selected_release_type = 'original_publication_year'
 		self.current_time_unit = 'decade'
-		self.selected_year = None
 		self.selected_book = None
 		
 		button_original = QRadioButton("Original Publication year")
@@ -111,7 +108,7 @@ class PublishingYearTab(QWidget):
 		
 		if self.is_outdated:
 			self.time_span_table.refresh_table()
-			self.get_books_by_year()
+			self.refresh_books_by_year_table()
 			refresh_panel(self)
 			self.is_outdated = False
 		
@@ -124,22 +121,7 @@ class PublishingYearTab(QWidget):
 		
 		self.selected_year = None
 		self.selected_book = None
-		
-		
-	def get_pubyear_list(self):
-		"""
-		Cleans list of stats by time span <year_list> then calls
-		method for refreshing the list according to selected time
-		interval, year, decade or century.
-		"""
-		
-		if self.current_time_unit == 'year':
-			get_list_by_attribute(year_list, self.selected_release_type)
-		elif self.current_time_unit == 'decade':
-			self.pubyear_table_to_decade()
-		elif self.current_time_unit == 'century':
-			self.pubyear_table_to_century()
-		
+	
 		
 	def choose_release(self, release_type):
 		"""
@@ -151,6 +133,7 @@ class PublishingYearTab(QWidget):
 		self.selected_release_type = release_type
 		self.time_span_table.refresh_table()	
 		
+		
 	def choose_time_unit(self, time_unit):
 		"""
 		Writes user selection on time interval(year, decade or century) 
@@ -160,132 +143,12 @@ class PublishingYearTab(QWidget):
 		self.current_time_unit = time_unit
 		self.time_span_table.refresh_table()	
 		
-	
-	def pubyear_table_to_decade(self):
+		
+	def refresh_books_by_year_table(self):
 		"""
-		Gets a list of decades with at least one book on specified
-		release criteria(first or owned edition), amount of books and
-		average rating.
+		Refreshes list and table for books published during selected time span.
 		"""
 		
-		year_list.clear()
-		
-		year = get_now_year()
-		cur_decade = int(f"{str(year)[0:-1]}0")
-		decades_dict = dict()
-		while cur_decade > int(year) - 209:
-			decades_dict[f"{cur_decade}"] = [0, 0, 0]
-			cur_decade -= 10
-		decades_dict[f"{cur_decade + 9} or older"] = [0, 0, 0]
-		
-		for book in library.values():
-			if getattr(book, self.selected_release_type):
-				try:
-					decades_dict[f"{getattr(book, self.selected_release_type)[0:-1]}0"][0] += 1
-					if book.rating:
-						decades_dict[f"{getattr(book, self.selected_release_type)[0:-1]}0"][1] += 1
-						decades_dict[f"{getattr(book, self.selected_release_type)[0:-1]}0"][2] += int(book.rating)
-				except KeyError:
-					decades_dict[f"{cur_decade + 9} or older"][0] += 1
-					if book.rating:
-						decades_dict[f"{cur_decade + 9} or older"][1] += 1
-						decades_dict[f"{cur_decade + 9} or older"][2] += int(book.rating)
-						
-		for key, value in decades_dict.items():
-			if value[0] > 0:
-				year_list.append(dict(
-					title = key,
-					book_count = value[0],
-					average_rating = f"{average(value[2], value[1]):.2f}",
-					))
-					
-		
-	def pubyear_table_to_century(self):
-		"""
-		Gets a list of centuries with at least one book on specified
-		release criteria(first or owned edition), amount of books and
-		average rating.
-		"""
-		
-		year_list.clear()
-		
-		year = get_now_year()
-		cur_century = int(f"{str(year)[0:-2]}00")
-		centuries_dict = dict()
-		while cur_century > int(year) - 1099:
-			centuries_dict[f"{cur_century}"] = [0, 0, 0]
-			cur_century -= 100
-		centuries_dict[f"{cur_century + 100} or older"] = [0, 0, 0]
-		
-		for book in library.values():
-			if getattr(book, self.selected_release_type):
-				try:
-					if not int(getattr(book, self.selected_release_type)) % 100 == 0:
-						centuries_dict[f"{getattr(book, self.selected_release_type)[0:-2]}00"][0] += 1
-						if book.rating:
-							centuries_dict[f"{getattr(book, self.selected_release_type)[0:-2]}00"][1] += 1
-							centuries_dict[f"{getattr(book, self.selected_release_type)[0:-2]}00"][2] += int(book.rating)
-					elif int(getattr(book, self.selected_release_type)) % 100 == 0:
-						centuries_dict[f"{int(f'{getattr(book, self.selected_release_type)[0:-2]}00') - 100}"][0] += 1
-						if book.rating:
-							centuries_dict[f"{int(f'{getattr(book, self.selected_release_type)[0:-2]}00') - 100}"][1] += 1
-							centuries_dict[f"{int(f'{getattr(book, self.selected_release_type)[0:-2]}00') - 100}"][2] += int(book.rating)
-				except KeyError:
-					centuries_dict[f"{cur_century + 100} or older"][0] += 1
-					if book.rating:
-						centuries_dict[f"{cur_century + 100} or older"][1] += 1
-						centuries_dict[f"{cur_century + 100} or older"][2] += int(book.rating)
-						
-		for key, value in centuries_dict.items():
-			if value[0] > 0:
-				year_list.append(dict(
-					title = key,
-					book_count = value[0],
-					average_rating = f"{average(value[2], value[1]):.2f}",
-					))
-
-
-	def get_year(self):
-		"""
-		Gets clicked year/decade/century on table then calls method
-		to get a list of books in that time span.
-		"""
-		
-		index = [index.row() for index in self.time_span_table.selectionModel().selectedRows()]
-		if index:
-			self.selected_year = year_list[index[0]]['title']
-			self.get_books_by_year()
-			
-			
-	def get_books_by_year(self):
-		"""
-		Gets a list of published books by year/decade/century, then
-		calls <refresh_table> on books by published year table.
-		"""
-		
-		books_by_year_list.clear()
-		if self.selected_year:
-			if self.current_time_unit == 'year':
-				for index in library:
-					if getattr(library[index], self.selected_release_type) == self.selected_year:
-						books_by_year_list.append(index)
-			
-			elif self.current_time_unit == 'decade':
-				for index in library:
-					if getattr(library[index], self.selected_release_type):
-						if 'older' in self.selected_year:
-							if int(getattr(library[index], self.selected_release_type)) < int(f'{int(get_now_year()[0:-1]) - 20}0'):
-								books_by_year_list.append(index)
-						elif int(getattr(library[index], self.selected_release_type)) >= int(self.selected_year) and int(getattr(library[index], self.selected_release_type)) < int(self.selected_year) + 10:
-							books_by_year_list.append(index)				
-				
-			elif self.current_time_unit == 'century':
-				for index in library:
-					if getattr(library[index], self.selected_release_type):
-						if 'older' in self.selected_year:
-							if int(getattr(library[index], self.selected_release_type)) <= int(f'{int(get_now_year()[0:-2]) - 10}00'):
-								books_by_year_list.append(index)
-						elif int(getattr(library[index], self.selected_release_type)) > int(self.selected_year) and int(getattr(library[index], self.selected_release_type)) <= int(self.selected_year) + 100:
-							books_by_year_list.append(index)
-					
-		self.books_by_year_table.refresh_table()
+		if self.time_span_table.selected_year is not None:
+			get_books_by_publishing_year(self.time_span_table.selected_year, self.current_time_unit, self.selected_release_type)
+			self.books_by_year_table.refresh_table()
