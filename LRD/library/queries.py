@@ -3,6 +3,7 @@ from functions.value_calculations import average
 from library.book_library import (library, 
 	books_by_bookshelf_list, 
 	books_by_publisher, 
+	books_by_series_or_collection,
 	books_by_year_list,
 	books_read_by_year_list,
 	bookshelves_list, 
@@ -115,6 +116,15 @@ def get_books_by_publishing_year(year, time_span, attribute):
 						books_by_year_list.append(index)
 				elif int(getattr(library[index], attribute)) > int(year) and int(getattr(library[index], attribute)) <= int(year) + 100:
 					books_by_year_list.append(index)
+					
+					
+def get_books_by_series_or_collection(title, attribute):
+	"""
+	Refreshes books_by_series_or_collection with a lists of books in the selected series or collection.
+	"""
+	
+	books_by_series_or_collection.clear()
+	[books_by_series_or_collection.append(index) for index in library if getattr(library[index], attribute) == title]
 	
 	
 def get_books_with_text(book_attribute, output_list):

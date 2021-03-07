@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QTableWidgetItem
 
+from library.book_library import series_list, collection_list
 from library.queries import get_list_by_attribute
 from tables.generic_table import GenericTable
 
@@ -11,25 +12,20 @@ class SeriesTable(GenericTable):
 	args:
 	content: either 'series' or 'collection'.
 	
-	get_books: function to get books by selected series or collection.
-	
-	source_list: list containing the data which will be loaded into
-	this table.
-	
 	attributes:
 	self.current_sorting: column selected for sorting table.
 	"""
 	
-	def __init__(self, parent, content, get_books, source_list):
+	def __init__(self, parent_tab, content):
 		super().__init__(column_count = 3)
-		self.parent = parent
+		self.parent_tab = parent_tab
 		self.content = content
-		self.get_books = get_books
 		self.current_sorting = '0'
-		self.source_list = source_list
+		self.selected_item = None
+		self.source_list = series_list if content == 'series' else collection_list
 		
-		self.itemSelectionChanged.connect(self.get_books)
-		self.clicked.connect(lambda: self.switch_to_this_table(parent.current_table))
+		self.itemSelectionChanged.connect(self.series_selection_changed)
+		self.clicked.connect(lambda: self.switch_to_this_table(parent_tab.current_table))
 		self.setHorizontalHeaderLabels((
 			self.content.title(),
 			"Books",
@@ -38,6 +34,32 @@ class SeriesTable(GenericTable):
 		self.setColumnWidth(0,240)
 		self.setColumnWidth(1,48)
 		self.setColumnWidth(2,95)
+		
+		
+	def get_selected_series(self):
+		"""
+		Returns selected series' or collection's name, if there's a selected one.
+		"""
+		
+		index = [index.row() for index in self.selectionModel().selectedRows()]
+		if index:
+			if self.content == 'series':
+				return series_list[index[0]]['title']
+			elif self.content == 'collection':
+				return collection_list[index[0]]['title']
+				
+				
+	def series_selection_changed(self):
+		"""
+		When user selects other series or collection, display all books in that series or collection.
+		This is achieved by: getting the selected item and storing it. Informing the window tab of the selection type
+		(series or collection) and finally refreshing the books by series or collection table.
+		"""
+		
+		if self.get_selected_series():
+			self.selected_item = self.get_selected_series()
+			self.parent_tab.current_table = self.content
+			self.parent_tab.refresh_books_by_series_table()	
 		
 	
 	def switch_to_this_table(self, current_table):
