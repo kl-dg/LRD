@@ -16,6 +16,7 @@ from library.book_library import (library,
 	quotes_list, 
 	reviews_list, 
 	research_books_list,
+	search_list,
 	to_read_list,
 	wishlist,
 	year_list,
@@ -439,3 +440,29 @@ def get_read_books_general_statistics():
 				length_sum += int(book.num_pages)
 
 	return (book_count, length_sum, average(length_sum, length_count), average(rating_sum, rating_count))
+	
+	
+def search_in_library(search_input, search_field, case_sensitive):
+	"""
+	
+	"""
+	
+	if case_sensitive:
+		if search_field.lower() != 'bookshelves' and search_field.lower() != 'author':
+			for index in library:
+				if search_input in getattr(library[index], search_field.lower()):
+					search_list.append(index)
+		else:
+			for index in library:
+				if search_input in "; ".join(getattr(library[index], search_field.lower())):
+					search_list.append(index)
+					
+	elif not case_sensitive:
+		if search_field.lower() != 'bookshelves' and search_field.lower() != 'author':
+			for index in library:
+				if search_input.lower() in getattr(library[index], search_field.lower()).lower():
+					search_list.append(index)
+		else:
+			for index in library:
+				if search_input.lower() in "; ".join(getattr(library[index], search_field.lower())).lower():
+					search_list.append(index)	

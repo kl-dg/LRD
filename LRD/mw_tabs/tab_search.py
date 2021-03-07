@@ -1,14 +1,7 @@
-from PyQt5.QtWidgets import (
-	QCheckBox, 
-	QHBoxLayout, 
-	QLabel, 
-	QLineEdit,
-	QPushButton, 
-	QVBoxLayout, 
-	QWidget, 
-	)
+from PyQt5.QtWidgets import QCheckBox, QHBoxLayout, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget
 
-from library.book_library import library, search_list
+from library.book_library import search_list
+from library.queries import search_in_library
 from other_ui.cb_constructors import FieldDropDown
 from panel.refresh import refresh_panel
 from panel.empty_panel import EmptyPanel
@@ -135,32 +128,12 @@ class SearchTab(QWidget):
 		
 	def refresh_search_results(self):
 		"""
-		Delete all results from previous search, if there's an input in
-		search field, return all books that have that value in 
-		selected attribute.
+		Do a search and refresh search results.
 		"""
 		
 		search_list.clear()
 		
 		if len(self.current_search_input) > 0:
-			if self.current_search_case_sensitive:
-				if self.current_search_field.lower() != 'bookshelves' and self.current_search_field.lower() != 'author':
-					for index in library:
-						if self.current_search_input in getattr(library[index], self.current_search_field.lower()):
-							search_list.append(index)
-				else:
-					for index in library:
-						if self.current_search_input in "; ".join(getattr(library[index], self.current_search_field.lower())):
-							search_list.append(index)
-							
-			elif not self.current_search_case_sensitive:
-				if self.current_search_field.lower() != 'bookshelves' and self.current_search_field.lower() != 'author':
-					for index in library:
-						if self.current_search_input.lower() in getattr(library[index], self.current_search_field.lower()).lower():
-							search_list.append(index)
-				else:
-					for index in library:
-						if self.current_search_input.lower() in "; ".join(getattr(library[index], self.current_search_field.lower())).lower():
-							search_list.append(index)							
-		
+			search_in_library(self.current_search_input, self.current_search_field, self.current_search_case_sensitive)
+								
 		self.search_table.refresh_table()
