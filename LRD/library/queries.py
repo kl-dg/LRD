@@ -1,6 +1,8 @@
 from functions.date_formatting import get_now_year
 from functions.value_calculations import average
 from library.book_library import (library, 
+	author_list,
+	books_by_author_list,
 	books_by_bookshelf_list, 
 	books_by_publisher, 
 	books_by_series_or_collection,
@@ -187,6 +189,53 @@ def get_list_by_attribute(working_list, attribute, get_avg_length = False):
 				book_count = value[0],
 				average_rating = f"{average(value[2], value[1]):.2f}",
 				))
+				
+				
+def get_list_of_authors():
+	"""
+	Refreshes author_list with the current list of authors found in the library and their stats (book count, average
+	rating and book length).
+	"""
+	
+	author_list.clear()
+	
+	author_dict = dict()
+		
+	for book in library.values():
+		if len(book.author) > 0:
+			for author in book.author:
+				if author not in author_dict:
+					author_dict[author] = [0] * 5
+				
+				author_dict[author][0] += 1
+				if book.rating:
+					author_dict[author][1] += int(book.rating)
+					author_dict[author][2] += 1
+				if book.num_pages:
+					author_dict[author][3] += int(book.num_pages)
+					author_dict[author][4] += 1
+					
+	for key, value in author_dict.items():
+		author_list.append(dict(
+			author = key,
+			book_count = value[0],
+			average_rating = f"{average(value[1], value[2]):.2f}",
+			average_length = f"{average(value[3], value[4]):.2f}",
+			))
+				
+				
+def get_list_of_books_by_selected_author(author):
+	"""
+	Refreshes books_by_author_list by getting a list of books containing the author selected by user.
+	"""
+	
+	books_by_author_list.clear()
+		
+	if author == "":
+		[books_by_author_list.append(index) for index in library if len(library[index].author) == 0]
+	
+	else:
+		[books_by_author_list.append(index) for index in library if author in library[index].author]
 				
 
 def get_pubyear_list(time_span, attribute):

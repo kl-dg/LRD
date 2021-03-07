@@ -1,8 +1,8 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
-	
-from functions.value_calculations import average
-from library.book_library import author_list, library, books_by_author_list
+
+from library.book_library import author_list, books_by_author_list, library
+from library.queries import get_list_of_books_by_selected_author
 from main_ui.main_window_proxy import main_window
 from panel.refresh import refresh_panel
 from panel.empty_panel import EmptyPanel
@@ -36,7 +36,6 @@ class AuthorTab(QWidget):
 	def __init__(self):
 		super().__init__()
 		self.is_outdated = True
-		self.selected_author = None
 		self.run_for_the_first_time = True
 		self.selected_book = None
 		
@@ -48,7 +47,7 @@ class AuthorTab(QWidget):
 		self.author_count_info_layout = QHBoxLayout()
 		self.author_count_info_layout.addWidget(self.author_count_info)
 		
-		self.author_table = AuthorTable(self, author_list)
+		self.author_table = AuthorTable(self)
 		self.books_by_author_table = BookTable(self, books_by_author_list)
 		
 		button_edit_author = QPushButton("Edit selected author")
@@ -86,7 +85,7 @@ class AuthorTab(QWidget):
 		"""
 		if self.is_outdated:
 			self.author_table.refresh_table()
-			self.get_books_by_author()
+			self.refresh_books_by_author_table()
 			self.author_count_info.setText(f"Your library has {len(library)} books by {len(author_list)} authors")
 			refresh_panel(self)
 			self.is_outdated = False
@@ -98,7 +97,7 @@ class AuthorTab(QWidget):
 		and Info Panel.
 		"""
 		
-		self.selected_author = None
+		self.author_table.selected_author = None
 		self.selected_book = None		
 		
 		
@@ -107,60 +106,9 @@ class AuthorTab(QWidget):
 		Gets selected author and calls batch edit author name. 
 		"""
 		
-		index = [index.row() for index in self.author_table.selectionModel().selectedRows()]
-		if index:
-			main_window.edit_attribute(author_list[index[0]]['author'], 'author')
-			
-			
-	def get_list_by_attribute(self):
-		"""
-		Fills author list with unique author names, their book counts,
-		average rating and length.
-		"""
-		
-		author_list.clear()
-		
-		author_set = set()
-		for book in library.values():
-			if len(book.author) > 0:
-				for author in book.author:
-					author_set.add(author)
-					
-		author_dict = dict()
-		for author in author_set:
-			author_dict[author] = [0, 0, 0, 0, 0]
-			
-		for book in library.values():
-			if len(book.author) > 0:
-				for author in book.author:
-					author_dict[author][0] += 1
-					if book.rating:
-						author_dict[author][1] += int(book.rating)
-						author_dict[author][2] += 1
-					if book.num_pages:
-						author_dict[author][3] += int(book.num_pages)
-						author_dict[author][4] += 1
-						
-		for key, value in author_dict.items():
-			author_list.append(dict(
-				author = key,
-				book_count = value[0],
-				average_rating = f"{average(value[1], value[2]):.2f}",
-				average_length = f"{average(value[3], value[4]):.2f}",
-				))
-
-		
-	def get_author(self):
-		"""
-		Gets selected author and calls <self.get_books_by_author> in 
-		order to get a list of their books.
-		"""
-		
-		index = [index.row() for index in self.author_table.selectionModel().selectedRows()]
-		if index:
-			self.selected_author = author_list[index[0]]['author']
-			self.get_books_by_author()
-			
+		if self.author_table.get_selected_author():
+			main_window.edit_attribute(self.author_table.get_selected_author(), 'author')
+				
 			
 	def get_books_without_author(self):
 		"""
@@ -168,22 +116,14 @@ class AuthorTab(QWidget):
 		table.
 		"""
 		
-		self.selected_author = ""
-		self.get_books_by_author()
-			
-			
-	def get_books_by_author(self):
+		self.author_table.selected_author = ""
+		self.refresh_books_by_author_table()
+		
+		
+	def refresh_books_by_author_table(self):
 		"""
-		Gets a list of books by selected author then calls
-		<refresh_table> on books by author table.
+		Refreshes list and table of books written by selected author.
 		"""
 		
-		books_by_author_list.clear()
-		
-		if self.selected_author == "":
-			[books_by_author_list.append(index) for index in library if len(library[index].author) == 0]
-		
-		else:
-			[books_by_author_list.append(index) for index in library if self.selected_author in library[index].author]
-				
+		get_list_of_books_by_selected_author(self.author_table.selected_author)
 		self.books_by_author_table.refresh_table()
