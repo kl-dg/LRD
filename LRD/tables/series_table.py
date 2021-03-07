@@ -25,7 +25,7 @@ class SeriesTable(GenericTable):
 		self.source_list = series_list if content == 'series' else collection_list
 		
 		self.itemSelectionChanged.connect(self.series_selection_changed)
-		self.clicked.connect(lambda: self.switch_to_this_table(parent_tab.current_table))
+		self.clicked.connect(self.redisplay_previously_selected)
 		self.setHorizontalHeaderLabels((
 			self.content.title(),
 			"Books",
@@ -62,14 +62,14 @@ class SeriesTable(GenericTable):
 			self.parent_tab.refresh_books_by_series_table()	
 		
 	
-	def switch_to_this_table(self, current_table):
+	def redisplay_previously_selected(self):
 		"""
-		This should be run when itemSelectionChanged is not emitted 
-		because user clicked on the last selected item from this table
-		before selecting an item from the other table.
+		This should be run when itemSelectionChanged is not emitted because user selected item, then clicked on "Show
+		standalone books/not in collection" then select the same item again.
 		"""
 		
-		if current_table != self.content: self.get_books()
+		if self.selected_item is not None and self.selected_item == self.get_selected_series() or self.selected_item == "":
+			self.series_selection_changed()
 	
 		
 	def refresh_table(self, sorting=False):

@@ -143,7 +143,7 @@ class SeriesTab(QWidget):
 		"""
 		
 		self.current_table = 'collection'
-		self.selected_collection = ""
+		self.collection_table.selected_item = ""
 		self.refresh_books_by_series_table()
 		
 		
