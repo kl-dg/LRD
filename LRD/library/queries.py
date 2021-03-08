@@ -444,8 +444,10 @@ def get_read_books_general_statistics():
 	
 def search_in_library(search_input, search_field, case_sensitive):
 	"""
-	
+	Refreshes search_list with library indexes of all ocurrences of an attribute value.
 	"""
+	
+	search_list.clear()
 	
 	if case_sensitive:
 		if search_field.lower() != 'bookshelves' and search_field.lower() != 'author':

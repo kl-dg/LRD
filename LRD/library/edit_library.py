@@ -10,6 +10,28 @@ def delete_book(index):
 	
 	library.pop(index)
 	
+	
+def edit_attribute_value(old_value, new_value, attribute):
+	"""
+	Edits all ocurrences of an attribute value across the library.
+	"""
+	
+	if attribute == 'author':
+		for book in library.values():
+			if old_value in book.author:
+				if len(new_value) == 0:
+					ocurrences_indexes = [i for i in range(len(book.author)) if book.author[i] == old_value]
+					ocurrences_indexes.sort(reverse=True)
+					for i in ocurrences_indexes:
+						book.author.pop(i)
+				else:
+					book.author = [new_value if author == old_value else author for author in book.author]
+	
+	else:
+		for book in library.values():
+			if getattr(book, attribute) == old_value:
+				setattr(book, attribute, new_value)
+	
 
 def edit_text_attribute(index, attribute, text):
 	"""

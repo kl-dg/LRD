@@ -131,8 +131,6 @@ class SearchTab(QWidget):
 		Do a search and refresh search results.
 		"""
 		
-		search_list.clear()
-		
 		if len(self.current_search_input) > 0:
 			search_in_library(self.current_search_input, self.current_search_field, self.current_search_case_sensitive)
 								

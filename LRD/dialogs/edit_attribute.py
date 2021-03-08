@@ -1,7 +1,7 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialog, QHBoxLayout, QLineEdit, QPushButton, QVBoxLayout
 
-from library.book_library import library
+from library.edit_library import edit_attribute_value
 from main_ui.main_window_proxy import main_window
 
 
@@ -54,21 +54,7 @@ class EditValueByAttribute(QDialog):
 		"""
 		
 		if self.value != self.text_field.text().strip():
-			if self.attribute == 'author':
-				for book in library.values():
-					if self.value in book.author:
-						if len(self.text_field.text().strip()) == 0:
-							ocurrences_indexes = [i for i in range(len(book.author)) if book.author[i] == self.value]
-							ocurrences_indexes.sort(reverse=True)
-							for i in ocurrences_indexes:
-								book.author.pop(i)
-						else:
-							book.author = [self.text_field.text().strip() if author == self.value else author for author in book.author]
-			
-			else:
-				for book in library.values():
-					if getattr(book, self.attribute) == self.value:
-						setattr(book, self.attribute, self.text_field.text().strip())
+			edit_attribute_value(self.value, self.text_field.text().strip(), self.attribute)
 		
 			main_window.flag_unsaved_changes = True
 			main_window.set_interface_outdated()
