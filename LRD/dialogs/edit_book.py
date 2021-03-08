@@ -17,9 +17,9 @@ from PyQt5.QtWidgets import (
 from functions.date_formatting import get_now_time, ddmmyyyy_to_datetime
 from functions.isbn import isbn_10_validator, isbn_13_validator
 from functions.string_formatting import to_rating_cb					 				 
-from library.strings import available_formats, reading_statuses
 from library.book_library import library, Book
-from library.library_indexer import get_index
+from library.edit_library import add_or_edit_book
+from library.strings import available_formats, reading_statuses
 from main_ui.main_window_proxy import main_window
 from other_ui.cb_constructors import (
 	DayDropDown, 
@@ -120,7 +120,6 @@ class EditBook(QWidget):
 		
 		isbn13_label = QLabel("ISBN 13:")
 		self.isbn13_field = QLineEdit()
-		self.isbn13_field.setValidator(int_validator)
 		
 		isbn_13_check_button = QPushButton()
 		isbn_13_check_button.setText("Check")
@@ -473,7 +472,7 @@ class EditBook(QWidget):
 			
 	def set_number_of_volumes(self, value):
 		"""
-		Integrity check: check if there's a valid integer in
+		Check if there's a valid integer in
 		<number_of_volumes> attribute. If empty or invalid, return 1.
 		"""
 		   
@@ -487,7 +486,7 @@ class EditBook(QWidget):
 		
 	def set_times_read_sb(self, value):
 		"""
-		Integrity check: check if there's a valid integer in
+		Check if there's a valid integer in
 		<times_read> attribute. If empty or invalid, return 0.
 		"""
 		   
@@ -533,78 +532,42 @@ class EditBook(QWidget):
 		
 	def edit_book(self):
 		"""
-		If an index was given, changes attributes in currently 
-		selected book. Else, add a new book.
+		Add a new, or edit an existing book, refresh interface and close this window.
 		"""
 		
-		if self.index is not None:
-			library[self.index] = Book(
-				self.title_field.text().strip(), 
-				[item.strip() for item in self.author_field.text().split(';') if len(item.strip()) > 0],
-				self.check_int(self.pages_field.text()),
-				self.publisher_field.text(),
-				self.set_rating(self.rating_cb.currentText()),
-				ddmmyyyy_to_datetime(f"{self.day_read.currentText()}/{self.month_read.currentIndex()}/{self.year_read.currentText()}"),
-				self.isbn10_field.text(),
-				self.isbn13_field.text(),
-				library[self.index].date_added,
-				ddmmyyyy_to_datetime(f"{self.day_started.currentText()}/{self.month_started.currentIndex()}/{self.year_started.currentText()}"),
-				self.reading_status_cb.currentText(),
-				self.format_cb.currentText(),
-				self.review_box.toPlainText(),
-				self.check_int(self.publication_year_field.text()),
-				self.check_int(self.original_publication_year_field.text()),
-				self.original_title_field.text(),
-				self.series_field.text(),
-				self.volume_in_series_field.text(),
-				self.collection_field.text(),
-				self.volume_in_collection_field.text(),
-				self.times_read_sb.value(),
-				self.number_of_volumes_sb.value(),
-				self.translator_field.text(),
-				self.weblink_field.text(),
-				self.bought_from_field.text(),
-				ddmmyyyy_to_datetime(f"{self.day_bought.currentText()}/{self.month_bought.currentIndex()}/{self.year_bought.currentText()}"),
-				[item.strip() for item in self.bookshelves_field.text().split(';') if len(item.strip()) > 0],
-				self.condition_field.text(),
-				self.quote_box.toPlainText(),
-				self.notes_box.toPlainText(),
-				)
-									 
-									 
-		else:
-			library[get_index()] = Book(
-				self.title_field.text().strip(), 
-				[item.strip() for item in self.author_field.text().split(';') if len(item.strip()) > 0],
-				self.check_int(self.pages_field.text()),
-				self.publisher_field.text(),
-				self.set_rating(self.rating_cb.currentText()),
-				ddmmyyyy_to_datetime(f"{self.day_read.currentText()}/{self.month_read.currentIndex()}/{self.year_read.currentText()}"),
-				self.isbn10_field.text(),
-				self.isbn13_field.text(),
-				get_now_time(),
-				ddmmyyyy_to_datetime(f"{self.day_started.currentText()}/{self.month_started.currentIndex()}/{self.year_started.currentText()}"),
-				self.reading_status_cb.currentText(),
-				self.format_cb.currentText(),
-				self.review_box.toPlainText(),
-				self.check_int(self.publication_year_field.text()),
-				self.check_int(self.original_publication_year_field.text()),
-				self.original_title_field.text(),
-				self.series_field.text(),
-				self.volume_in_series_field.text(),
-				self.collection_field.text(),
-				self.volume_in_collection_field.text(),
-				self.times_read_sb.value(),
-				self.number_of_volumes_sb.value(),
-				self.translator_field.text(),
-				self.weblink_field.text(),
-				self.bought_from_field.text(),
-				ddmmyyyy_to_datetime(f"{self.day_bought.currentText()}/{self.month_bought.currentIndex()}/{self.year_bought.currentText()}"),
-				[item.strip() for item in self.bookshelves_field.text().split(';') if len(item.strip()) > 0],
-				self.condition_field.text(),
-				self.quote_box.toPlainText(),
-				self.notes_box.toPlainText(),
-				)
+		add_or_edit_book(
+			self.index,
+			self.title_field.text().strip(), 
+			[item.strip() for item in self.author_field.text().split(';') if len(item.strip()) > 0],
+			self.check_int(self.pages_field.text()),
+			self.publisher_field.text(),
+			self.set_rating(self.rating_cb.currentText()),
+			ddmmyyyy_to_datetime(f"{self.day_read.currentText()}/{self.month_read.currentIndex()}/{self.year_read.currentText()}"),
+			self.isbn10_field.text(),
+			self.isbn13_field.text(),
+			library[self.index].date_added if self.index is not None else None,
+			ddmmyyyy_to_datetime(f"{self.day_started.currentText()}/{self.month_started.currentIndex()}/{self.year_started.currentText()}"),
+			self.reading_status_cb.currentText(),
+			self.format_cb.currentText(),
+			self.review_box.toPlainText(),
+			self.check_int(self.publication_year_field.text()),
+			self.check_int(self.original_publication_year_field.text()),
+			self.original_title_field.text(),
+			self.series_field.text(),
+			self.volume_in_series_field.text(),
+			self.collection_field.text(),
+			self.volume_in_collection_field.text(),
+			self.times_read_sb.value(),
+			self.number_of_volumes_sb.value(),
+			self.translator_field.text(),
+			self.weblink_field.text(),
+			self.bought_from_field.text(),
+			ddmmyyyy_to_datetime(f"{self.day_bought.currentText()}/{self.month_bought.currentIndex()}/{self.year_bought.currentText()}"),
+			[item.strip() for item in self.bookshelves_field.text().split(';') if len(item.strip()) > 0],
+			self.condition_field.text(),
+			self.quote_box.toPlainText(),
+			self.notes_box.toPlainText(),
+			)
 								 
 		main_window.flag_unsaved_changes = True
 		main_window.set_interface_outdated()
