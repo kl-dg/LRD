@@ -99,7 +99,8 @@ class ImportAssistant(QWidget):
 		gr_naming_format_selection.addButton(gr_naming_format_last)
 		
 		gr_import_additional_authors_choice = QCheckBox("Import additional authors")
-		gr_import_additional_authors_choice.stateChanged.connect(lambda: setattr(self, 'gr_additional_authors_selection', gr_import_additional_authors_choice.isChecked()))
+		gr_import_additional_authors_choice.stateChanged.connect(
+			lambda: setattr(self, 'gr_additional_authors_selection', gr_import_additional_authors_choice.isChecked()))
 		if self.gr_additional_authors_selection: gr_import_additional_authors_choice.setChecked(True)
 		
 		gr_back_button = QPushButton("Back")
