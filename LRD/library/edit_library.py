@@ -9,7 +9,7 @@ def add_or_edit_book(index, title, author, num_pages, publisher, rating, date_re
 	"""
 	Adds or edits a book on the library.
 	
-	If index is None, a new book will added to the library. If an index is given, the book on the library index will
+	If index is None, a new book will be added to the library. If an index is given, the book on the library index will
 	be effectively overwritten by a new Book object containing the changed and the unchanged data.
 	"""
 	if index == None:
