@@ -48,7 +48,6 @@ def add_or_edit_book(index, title, author, num_pages, publisher, rating, date_re
 		notes
 		)
 	
-		
 
 def delete_book(index):
 	"""
