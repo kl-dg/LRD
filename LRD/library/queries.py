@@ -247,6 +247,30 @@ def get_list_by_attribute(working_list, attribute, get_avg_length = False):
 				))
 				
 				
+def get_book_count_by_reading_status():
+	"""
+	Returns a dict with two lists, one for labels, another with the
+	amount of books by reading statuses.
+	"""
+	
+	status_count_dict = dict()
+
+	for book in library.values():
+		if book.reading_status not in status_count_dict:
+			status_count_dict[book.reading_status] = 0
+		status_count_dict[book.reading_status] += 1
+	
+	lib_composition_dict = dict()
+	lib_composition_dict['labels'] = []
+	lib_composition_dict['counts'] = []
+	
+	for key, count in status_count_dict.items():
+		lib_composition_dict['labels'].append(key)
+		lib_composition_dict['counts'].append(count)
+		
+	return lib_composition_dict
+				
+				
 def get_list_of_authors():
 	"""
 	Refreshes author_list with the current list of authors found in the library and their stats (book count, average
@@ -402,6 +426,62 @@ def get_read_books_by_year(year):
 		[books_read_by_year_list.append(index) for index in library if library[index].date_read and library[index].date_read.year == int(year)]
 	else:
 		[books_read_by_year_list.append(index) for index in library if not library[index].date_read]
+		
+		
+def get_reading_progress_stats():
+	"""
+	Returns a dictionary of lists for year, amount of book read
+	that year, pages read, average length, rating and pages read by day.
+	"""
+	
+	def get_avg_pages_day(year, total_pages):
+		"""
+		Returns total pages read read in an year divided by amount of days.
+		For current year, returns total pages read divided by days elapsed
+		from the beginning of this year.
+		"""
+
+		if str(year) == get_now_year():
+			return total_pages / days_elapsed_from_january_first()
+			
+		elif year % 4 != 0:
+			return total_pages / 365
+
+		elif year % 4 == 0:
+			return total_pages / 366
+	
+	content = dict()
+	labels = []
+	counts = []
+	pages = []
+	average_length = []
+	average_rating = []
+	average_pages_day = []
+	
+	if not year_read_list:
+		get_reading_status_lists()
+		
+	year_read_list_ = year_read_list[:]
+	year_read_list_.sort(key = lambda x: x['year'])
+	
+	for year_read in year_read_list_:
+		if year_read['year'] != 'No Read Date':
+			labels.append(year_read['year'])
+			counts.append(year_read['book_count'])
+			pages.append(int(year_read['total_pages']))
+			average_length.append(float(year_read['average_length']))
+			average_rating.append(float(year_read['average_rating']))
+			average_pages_day.append(round(get_avg_pages_day(int(year_read['year']), int(year_read['total_pages'])), 1))
+			
+		
+	content['labels'] = labels
+	content['book_counts'] = counts
+	content['pages'] = pages
+	content['average_length'] = average_length
+	content['average_rating'] = average_rating
+	content['average_pages_day'] = average_pages_day
+	
+	return content
 
 
 def get_reading_status_lists():
