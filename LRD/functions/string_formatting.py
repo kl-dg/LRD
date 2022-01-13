@@ -1,4 +1,4 @@
-from library.strings import available_formats
+from assets.strings import available_formats
 
 def author_import_from_gr(
 		author_first_last, 

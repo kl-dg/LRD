@@ -1,0 +1,18 @@
+#In this file are the lists of library indexes instead of the objects themselves.
+#This allows for sorting without duplicating items.
+search_results = []
+books_by_selected_author = []
+books_by_selected_series_or_collection = []
+books_by_selected_publisher = []
+books_by_selected_year = []
+books_by_selected_bookshelf = []
+books_current_reading = []
+books_to_read = []
+books_wishlisted = []
+books_read_on_selected_year = []
+books_given_up_reading = []
+books_for_reasearch = []
+books_not_read = []
+books_with_reviews = []
+books_with_quotes = []
+books_with_notes = []

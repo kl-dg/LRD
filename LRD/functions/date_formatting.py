@@ -1,24 +1,5 @@
 from datetime import date
-from datetime import datetime
-
-# Date generators
-	
-
-def get_now_time():
-	"""
-	Returns current date and time.
-	"""
-	
-	return datetime.now()
-	
-
-def get_now_year():
-	"""
-	Returns current year.
-	"""
-	
-	return get_now_time().strftime('%Y')
-
+from datetime import datetime	
 
 #From string to datetime
 
@@ -56,5 +37,5 @@ def days_elapsed_from_january_first():
 	current year.
 	"""
 	
-	interval = get_now_time() - datetime.strptime(f'01/01/{get_now_year()}', '%d/%m/%Y')
+	interval = datetime.now() - datetime.strptime(f'01/01/{datetime.now()}', '%d/%m/%Y')
 	return interval.days
